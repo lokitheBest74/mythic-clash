@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#070b19"><title>MYTHIC CLASH — Anime Strategy Arena</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Oxanium:wght@500;600;700;800&display=swap');
+:root{--cyan:#54dcff;--blue:#217cff;--red:#ff456c;--gold:#ffd67c;--panel:rgba(6,12,30,.88)}*{box-sizing:border-box}body{margin:0;background:#050813;color:#f4f7ff;font-family:Rajdhani,system-ui,sans-serif;overflow-x:hidden}button{font:inherit;color:inherit;cursor:pointer}button:focus-visible{outline:2px solid var(--cyan)}.screen{min-height:100vh;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 15%,#1c2c57 0,#090d20 54%,#03050d 100%)}.topline{height:5px;background:linear-gradient(90deg,#176fff,#bb6cff,#ff3e69)}.nav{display:flex;align-items:center;justify-content:space-between;padding:15px clamp(14px,4vw,48px);position:relative;z-index:3}.logo{font-family:Oxanium,sans-serif;font-weight:800;font-size:clamp(24px,4vw,42px);letter-spacing:-1.8px;line-height:.8;text-shadow:0 0 25px #2589ff}.logo span{color:#9e76ff}.sub{font-size:10px;letter-spacing:4px;color:#9baed1;margin-top:9px}.pill{border:1px solid #32517e;background:#0b1833;border-radius:30px;padding:8px 13px;color:#cde7ff;font-size:13px}.hero{position:relative;min-height:calc(100vh - 85px);display:grid;grid-template-columns:minmax(260px,.85fr) minmax(420px,1.4fr);align-items:center;padding:2vh clamp(14px,4vw,56px) 35px;gap:16px}.hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#070b19 0%,rgba(7,11,25,.93) 25%,rgba(7,11,25,.18) 67%,#070b19 100%),linear-gradient(0deg,#070b19 0%,transparent 45%,rgba(7,11,25,.2));pointer-events:none}.heroCopy{position:relative;z-index:2;max-width:470px}.eyebrow{color:#74dfff;letter-spacing:5px;font-size:12px;font-weight:700}.hero h1{font-family:Oxanium,sans-serif;font-size:clamp(44px,7vw,90px);line-height:.87;margin:16px 0;text-transform:uppercase;letter-spacing:-3px}.hero h1 em{font-style:normal;color:#9b76ff;text-shadow:0 0 28px #5d4bff}.hero p{font-size:19px;color:#b8c5df;max-width:360px;line-height:1.35}.features{display:flex;flex-wrap:wrap;gap:7px;margin:22px 0}.features span{border:1px solid #263e69;background:#0a1530c9;padding:6px 9px;font-size:12px;letter-spacing:1px;color:#c9e7ff}.primary{background:linear-gradient(110deg,#157cff,#7257ff);border:1px solid #93dfff;box-shadow:0 0 28px #226bff55;border-radius:7px;padding:13px 22px;font-family:Oxanium,sans-serif;font-weight:800;letter-spacing:1px;font-size:16px;min-width:190px}.secondary{background:#0c1730;border:1px solid #3d527a;border-radius:7px;padding:12px 17px;font-family:Oxanium,sans-serif;font-weight:700}.heroButtons{display:flex;gap:10px;flex-wrap:wrap}.heroArt{position:absolute;right:-2%;top:4%;width:73%;height:88%;background-image:url('assets/arena.jpg');background-size:cover;background-position:center;border:1px solid #29416a;box-shadow:0 0 80px #246cff22;clip-path:polygon(8% 0,100% 0,100% 100%,0 100%,0 10%);filter:saturate(1.08)}.heroArt:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(3,7,18,.3),transparent 50%),linear-gradient(90deg,#071020,transparent 40%)}.rosterStrip{position:absolute;bottom:17px;left:clamp(14px,4vw,56px);right:clamp(14px,4vw,56px);z-index:3;display:flex;gap:9px;max-width:780px}.miniCard{flex:1;min-width:0;border:1px solid #344b76;background:#071126d9;height:92px;position:relative;overflow:hidden;border-radius:5px}.miniCard img{width:100%;height:100%;object-fit:cover;opacity:.68}.miniCard b{position:absolute;bottom:4px;left:6px;font-family:Oxanium;font-size:11px;text-shadow:0 2px 6px #000}.miniCard:after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(transparent,#050916)}.modal{position:fixed;inset:0;z-index:20;background:#030612eF;display:none;align-items:center;justify-content:center;padding:14px}.modal.show{display:flex}.dialog{width:min(540px,100%);border:1px solid #436ba7;background:linear-gradient(145deg,#101d3a,#070b18 75%);padding:22px;border-radius:12px;box-shadow:0 0 60px #286aff30}.dialog h2{font-family:Oxanium;font-size:28px;margin:0 0 5px}.muted{color:#9baecf}.optionGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0}.option{padding:14px;text-align:left;background:#0b1730;border:1px solid #2d436d;border-radius:7px}.option.selected{border-color:#57dcff;box-shadow:inset 0 0 0 1px #57dcff44}.option b{display:block;font-family:Oxanium;font-size:15px}.option small{color:#a7bad9}.dialogActions{display:flex;justify-content:flex-end;gap:8px}.game{display:none;min-height:100vh;background:#050a16}.game.active{display:block}.gameTop{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;background:linear-gradient(90deg,#08142c,#10122a,#260f25);border-bottom:1px solid #2b426c}.gameLogo{font-family:Oxanium;font-weight:800;font-size:21px}.scores{display:flex;align-items:center;gap:10px;font-family:Oxanium}.scoreBlue{color:var(--cyan)}.scoreRed{color:var(--red)}.timer{padding:5px 12px;border:1px solid #3d5279;border-radius:5px;background:#070d1c}.arenaWrap{position:relative;margin:0 auto;width:100%;max-width:1280px;height:min(61vh,620px);min-height:330px;overflow:hidden;background:#18223c}.arenaBG{position:absolute;inset:0;background-image:linear-gradient(90deg,rgba(0,20,70,.22),rgba(40,0,30,.18)),url('assets/arena.jpg');background-size:cover;background-position:center;filter:saturate(1.1)}.arenaBG:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(4,8,20,.4),transparent 30%,rgba(4,8,20,.12))}.laneLine{position:absolute;top:5%;bottom:5%;left:50%;width:2px;background:linear-gradient(transparent,#ffffff35,transparent);z-index:1}.tower{position:absolute;top:12%;width:80px;height:120px;border-radius:10px 10px 5px 5px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:Oxanium;font-size:11px;text-shadow:0 2px 4px #000;z-index:2;clip-path:polygon(50% 0,90% 20%,100% 100%,0 100%,10% 20%)}.tower.blue{left:8%;background:linear-gradient(#59eaff,#1253c9 65%,#0a1c4c);box-shadow:0 0 25px #20aaff}.tower.red{right:8%;background:linear-gradient(#ff7a91,#a3163d 65%,#450d27)}.tower strong{font-size:17px}.towerBar{position:absolute;top:-12px;width:92px;height:6px;background:#111;border:1px solid #ffffff55}.towerBar i{display:block;height:100%;width:100%;background:#52edff}.tower.red .towerBar i{background:#ff426c}.fighter{position:absolute;z-index:4;width:54px;height:76px;transform:translate(-50%,-50%);animation:float 1.8s ease-in-out infinite;filter:drop-shadow(0 8px 7px #000b)}.fighter img{width:100%;height:100%;object-fit:cover;clip-path:polygon(50% 0,90% 16%,100% 76%,50% 100%,0 76%,10% 16%);border:1px solid white}.fighter:after{content:"";position:absolute;inset:-4px;border:2px solid var(--team);clip-path:polygon(50% 0,90% 16%,100% 76%,50% 100%,0 76%,10% 16%);pointer-events:none}.fighter .hp{position:absolute;top:-9px;left:0;width:100%;height:4px;background:#111;border:1px solid #ffffff70}.fighter .hp i{display:block;height:100%;background:#71f5b5;width:100%}.fighter.enemy .hp i{background:#ff4e72}.fighter .lvl{position:absolute;bottom:-7px;left:50%;transform:translateX(-50%);font-size:10px;background:#070b19;border:1px solid var(--team);padding:0 5px;border-radius:5px}.fighter.enemy{--team:#ff456c}.fighter.ally{--team:#56dfff}.fighter.hit{animation:hit .25s}.projectile{position:absolute;z-index:5;width:18px;height:18px;border-radius:50%;background:#b7f7ff;box-shadow:0 0 18px 7px #31a5ff;pointer-events:none;animation:bolt .55s ease-out forwards}.battleToast{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:6;background:#071124d9;border:1px solid #5b8bc8;padding:7px 13px;border-radius:5px;font-size:13px;white-space:nowrap}.bottomHUD{max-width:1280px;margin:auto;padding:12px clamp(8px,2vw,20px) 22px;display:grid;grid-template-columns:1fr auto;gap:12px;background:linear-gradient(#0a1022,#060a15)}.hand{display:flex;gap:8px;overflow-x:auto;padding:3px 2px 8px}.card{position:relative;flex:1;min-width:95px;max-width:150px;height:126px;border:1px solid #4b5c8c;border-radius:6px;background:#0c1530;overflow:hidden;text-align:left;padding:0;box-shadow:0 5px 15px #0008}.card img{width:100%;height:100%;object-fit:cover;opacity:.85;transition:transform .2s}.card:hover img{transform:scale(1.07)}.card:after{content:"";position:absolute;inset:25% 0 0;background:linear-gradient(transparent,#040713)}.cost{position:absolute;top:5px;left:5px;background:#7c5cff;border:1px solid #c9c1ff;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;font-family:Oxanium;font-weight:800;z-index:2}.cardText{position:absolute;bottom:6px;left:7px;right:3px;z-index:2}.cardText b{display:block;font-family:Oxanium;font-size:13px}.cardText small{color:#c5d2f0;font-size:11px}.card.active{border-color:#7aeaff;box-shadow:0 0 20px #2baaff88;transform:translateY(-3px)}.rightHUD{display:flex;flex-direction:column;gap:8px;min-width:100px}.energy{border:1px solid #45588d;border-radius:5px;padding:8px;background:#0d1631;text-align:center}.energy strong{font-family:Oxanium;font-size:28px;color:#a5a4ff}.energyBar{height:6px;background:#1b2852;border-radius:9px;overflow:hidden;margin-top:4px}.energyBar i{display:block;height:100%;width:60%;background:linear-gradient(90deg,#4d77ff,#d45cff)}.ability{border:1px solid #5a3d91;border-radius:5px;background:#180f32;padding:8px 5px;font-family:Oxanium;font-size:12px}.controls{display:flex;gap:8px;justify-content:space-between;align-items:center;max-width:1280px;margin:auto;padding:0 14px 14px;color:#9daed0;font-size:12px}.controls button{background:#0c1730;border:1px solid #30466e;border-radius:5px;padding:7px 10px}.toastMsg{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:30;background:#0a1730;border:1px solid #5d8ac6;padding:10px 15px;border-radius:7px;box-shadow:0 5px 25px #0009;max-width:90vw;text-align:center}.hidden{display:none!important}.endOverlay{position:absolute;inset:0;z-index:10;background:#030714df;display:none;align-items:center;justify-content:center;text-align:center;padding:20px}.endOverlay.show{display:flex}.endBox{max-width:400px;border:1px solid #4c72a8;background:#0b1430;padding:24px;border-radius:10px}.endBox h2{font-family:Oxanium;font-size:34px;margin:0 0 8px}.smallNote{font-size:12px;color:#8da3ca}@keyframes float{0%,100%{margin-top:0}50%{margin-top:-5px}}@keyframes bolt{from{opacity:1;transform:scale(.4)}to{opacity:0;transform:scale(2.4)}}@keyframes hit{50%{filter:brightness(3) drop-shadow(0 0 15px white)}}@media(max-width:760px){.hero{display:block;min-height:calc(100vh - 65px);padding-top:6vh}.heroArt{right:-45%;top:5%;width:130%;height:65%;opacity:.7}.heroCopy{max-width:400px}.hero p{font-size:17px}.rosterStrip{bottom:15px}.miniCard{height:76px}.miniCard b{font-size:9px}.nav{padding:12px 15px}.pill{font-size:11px}.arenaWrap{height:52vh;min-height:300px}.tower{width:48px;height:76px;font-size:9px}.tower strong{font-size:13px}.fighter{width:39px;height:57px}.bottomHUD{grid-template-columns:1fr;padding-top:7px;gap:4px}.rightHUD{flex-direction:row;align-items:stretch}.energy{min-width:74px;flex:1}.ability{flex:1}.card{min-width:78px;height:108px}.cardText b{font-size:11px}.cardText small{font-size:10px}.controls{font-size:10px}.gameTop{padding:8px}.gameLogo{font-size:16px}.scores{font-size:12px}.timer{padding:4px 6px}.optionGrid{grid-template-columns:1fr 1fr}}@media(max-height:650px) and (min-width:761px){.hero{min-height:580px}.arenaWrap{height:52vh}}
+
+/* Screenshot-matched battle mode: the provided concept is the actual game canvas, not merely a reference. */
+.game.active{position:fixed;inset:0;min-height:100svh;height:100svh;overflow:hidden;background:#030713;z-index:10}
+.gameTop,.bottomHUD,.controls{display:none!important}
+.arenaWrap{position:absolute;inset:0;width:100%;height:100%;max-width:none;min-height:0;margin:0;overflow:hidden;aspect-ratio:auto;background:#050915}
+.arenaBG{background-image:url('assets/battle-ui.jpg')!important;background-size:100% 100%!important;background-position:center!important;filter:none!important}
+.arenaBG:after{display:none!important}.laneLine,.tower{display:none!important}
+.artHotspots{position:absolute;inset:0;z-index:8;pointer-events:none}
+.hotCard,.hotAbility,.hotPause{position:absolute;display:block;padding:0;border:1px solid transparent;background:transparent;pointer-events:auto;border-radius:8px;touch-action:manipulation}
+.hotCard{top:74.2%;height:17.2%;width:8.2%}.hotCard[data-card="kael"]{left:16.9%}.hotCard[data-card="aurelia"]{left:26.1%}.hotCard[data-card="sylvaine"]{left:35.6%}.hotCard[data-card="seraphine"]{left:45.2%}.hotCard[data-card="darius"]{left:54.3%}
+.hotCard.selected{border:2px solid #9ff7ff;box-shadow:0 0 22px #38cfff,inset 0 0 18px #36bfff55;animation:cardPulse .7s ease-in-out infinite alternate}
+.hotAbility{top:77.1%;height:14.1%;width:6.5%}.hotAbility[data-ult="kael"]{left:65.7%}.hotAbility[data-ult="aurelia"]{left:73.5%}.hotAbility[data-ult="seraphine"]{left:81.4%}.hotAbility[data-ult="sylvaine"]{left:89.1%}.hotAbility[data-ult="darius"]{left:95.1%;width:4.5%}
+.hotAbility:active{background:#7beaff30;box-shadow:0 0 30px #6ddfff}
+.hotPause{right:0;top:50%;height:24%;width:5.2%}
+.liveReadout{position:absolute;left:42%;top:1.4%;width:18%;display:flex;flex-direction:column;align-items:center;gap:3px;font-family:Oxanium,sans-serif;font-weight:800;font-size:clamp(10px,1.8vw,22px);text-shadow:0 2px 5px #000;pointer-events:none;color:#dff9ff}
+.liveReadout span:first-child{font-size:clamp(14px,2.8vw,34px)}
+.screenFlash{position:absolute;inset:0;opacity:0;pointer-events:none;background:radial-gradient(circle at 50% 50%,#8ef4ff99,transparent 45%)}.screenFlash.flash{animation:screenFlash .65s ease-out}
+.fighter{width:clamp(24px,4vw,58px);height:clamp(34px,6.5vw,84px);z-index:7}.fighter img{border-radius:10px;clip-path:polygon(50% 0,90% 16%,100% 76%,50% 100%,0 76%,10% 16%);box-shadow:0 0 12px var(--team)}.fighter:after{border-radius:10px}.fighter .lvl{font-size:clamp(7px,.9vw,11px);white-space:nowrap}
+.projectile{z-index:9}.battleToast{top:16%;font-family:Oxanium,sans-serif;background:#071124ee;box-shadow:0 0 20px #287cff55;max-width:70vw;white-space:normal;text-align:center}
+.endOverlay{position:absolute;inset:0;z-index:15}.endBox{background:#071126f2;box-shadow:0 0 55px #277cff77}
+@keyframes cardPulse{from{box-shadow:0 0 8px #38cfff}to{box-shadow:0 0 24px #38cfff,inset 0 0 15px #36bfff66}}
+@keyframes screenFlash{0%{opacity:.95}100%{opacity:0}}
+@media(orientation:portrait){.fighter{width:clamp(22px,6vw,36px);height:clamp(32px,9vw,52px)}.liveReadout{font-size:9px}.liveReadout span:first-child{font-size:13px}.battleToast{top:17%;font-size:10px;padding:5px 8px}}
+
+
+/* Mobile-first battle layout: landscape keeps the original concept HUD; portrait uses the same arena art with real, usable controls. */
+html,body{min-height:100%;}
+button{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+@media(max-width:760px) and (orientation:portrait){
+  html,body{height:100%;min-height:100%;overflow:hidden;overscroll-behavior:none}
+  #home{min-height:100svh}
+  .game.active{position:fixed;inset:0;height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden;overscroll-behavior:contain;background:#030713;padding-bottom:env(safe-area-inset-bottom);}
+  .gameTop{display:flex!important;flex:0 0 auto;gap:6px;padding:8px 9px;min-height:48px;}
+  .gameLogo{font-size:clamp(14px,4vw,19px);white-space:nowrap;}
+  .scores{gap:5px;font-size:12px;min-width:0;}
+  .timer{padding:4px 6px;white-space:nowrap;}
+  #exitBtn{padding:7px 9px;white-space:nowrap;}
+  .arenaWrap{position:relative;inset:auto;flex:1 1 auto;width:100%;height:auto;min-height:190px;max-height:48svh;max-width:none;margin:0;aspect-ratio:auto;overflow:hidden;background:#071126;border-top:1px solid #21365f;border-bottom:1px solid #21365f;}
+  .arenaBG{background-image:url('assets/arena.jpg')!important;background-size:cover!important;background-position:center center!important;filter:saturate(1.08)!important;}
+  .arenaBG:after{display:block!important;background:linear-gradient(0deg,rgba(4,8,20,.32),transparent 42%,rgba(4,8,20,.05))!important;}
+  .laneLine{display:block!important;left:50%;top:10%;bottom:10%;opacity:.45;}
+  .tower{display:none!important}
+  .artHotspots{display:none!important}
+  .fighter{width:clamp(30px,8.8vw,42px);height:clamp(38px,11vw,54px);filter:drop-shadow(0 3px 5px #000e);}
+  .fighter img{width:100%;height:100%;object-fit:cover;object-position:center 35%;clip-path:none!important;border-radius:8px;border:2px solid var(--team);background:#0b1530;box-shadow:0 0 10px var(--team);}
+  .fighter:after{inset:-3px;clip-path:none!important;border-radius:10px;border:1px solid var(--team);}
+  .fighter .hp{top:-7px;height:4px;}
+  .fighter .lvl{bottom:-13px;font-size:9px;white-space:nowrap;padding:0 4px;}
+  .bottomHUD{display:grid!important;flex:0 0 auto;grid-template-columns:minmax(0,1fr) 82px;gap:7px;margin:0;padding:7px 7px 5px;max-width:none;background:linear-gradient(#0a1022,#060a15);}
+  .hand{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;min-width:0;overflow-x:auto;padding:0 0 3px;}
+  .card{flex:initial;min-width:0;width:100%;max-width:none;height:clamp(82px,12.5svh,105px);border-radius:6px;}
+  .card img{object-fit:cover;object-position:center top;}
+  .card:after{inset:35% 0 0;}
+  .cost{top:3px;left:3px;width:20px;height:20px;font-size:11px;}
+  .cardText{left:4px;bottom:4px;right:2px;}
+  .cardText b{font-size:clamp(8px,2.5vw,10px);letter-spacing:-.3px;overflow-wrap:anywhere;}
+  .cardText small{display:none;}
+  .rightHUD{display:flex;flex-direction:column;min-width:0;gap:5px;}
+  .energy{min-width:0;flex:1;padding:6px 4px;}
+  .energy strong{font-size:23px;line-height:1.05;}
+  .energy>div:first-child{font-size:9px!important;letter-spacing:1px!important;}
+  .ability{flex:1;min-width:0;padding:6px 3px;font-size:10px;line-height:1.2;}
+  #ultName{font-size:9px;overflow-wrap:anywhere;}
+  .controls{display:flex!important;flex:0 0 auto;gap:5px;align-items:center;padding:3px 7px 7px;background:#060a15;font-size:10px;min-height:34px;}
+  .controls>span:first-child{flex:1;min-width:0;line-height:1.15;}
+  .controls>span:last-child{display:flex;gap:4px;flex:0 0 auto;}
+  .controls button{padding:6px 7px;font-size:10px;white-space:nowrap;}
+  .battleToast{top:8px;max-width:86%;white-space:normal;text-align:center;font-size:10px;padding:5px 8px;}
+  .endOverlay{position:absolute;inset:0;}
+  .endBox{max-width:92%;}
+}
+@media(max-width:380px) and (orientation:portrait){
+  .gameTop{padding:7px 6px;}
+  .gameLogo{font-size:13px;}
+  .scores{font-size:10px;gap:3px;}
+  #exitBtn{font-size:10px;padding:6px;}
+  .bottomHUD{grid-template-columns:minmax(0,1fr) 72px;padding-inline:5px;gap:5px;}
+  .hand{gap:3px;}
+  .card{height:82px;}
+  .cardText b{font-size:8px;}
+  .controls{padding-inline:5px;font-size:9px;}
+  .controls button{font-size:9px;padding:5px;}
+}
+@media(orientation:landscape) and (max-height:500px){
+  .game.active{height:100dvh;}
+  .fighter{width:clamp(26px,4.3vw,48px);height:clamp(36px,6.5vw,68px);}
+}
+
+
+/* Final visual alignment and mobile spacing corrections. */
+.heroCopy{z-index:4}
+.liveReadout{inset:0!important;left:0!important;top:0!important;width:auto!important;display:block!important;}
+.liveReadout span:first-child{position:absolute;left:45.3%;top:1.55%;width:9.8%;padding:1px 0;text-align:center;font-size:clamp(12px,2.25vw,28px)!important;line-height:1.15;background:rgba(5,10,23,.94);border:1px solid rgba(89,165,255,.4);border-radius:5px;box-shadow:0 0 12px rgba(34,112,255,.18);}
+.liveReadout span:last-child{position:absolute;left:5.1%;top:82.1%;width:9.5%;height:12.1%;display:grid;place-items:center;font-size:0!important;color:transparent;background:radial-gradient(circle,rgba(5,10,25,.98) 0 43%,rgba(5,10,25,.88) 44% 54%,transparent 67%);}
+.liveReadout span:last-child b{display:block;color:#f2fbff;font-size:clamp(18px,3.5vw,48px);line-height:1;text-shadow:0 0 10px #359bff;}
+@media(max-width:760px) and (orientation:portrait){
+ .heroCopy{z-index:4}
+ .game.active{background-color:#030713;background-image:linear-gradient(rgba(3,7,19,.82),rgba(3,7,19,.9)),url('assets/arena.jpg');background-size:cover;background-position:center;}
+ .arenaWrap{height:48svh;max-height:48svh;flex:0 0 48svh;}
+ .controls{margin:0!important;}
+ .liveReadout{display:none!important;}
+}
+
+
+.mobileStatus{display:none}
+@media(max-width:760px) and (orientation:portrait){
+ .mobileStatus{display:block;flex:0 0 auto;margin:0 7px;padding:7px 10px 6px;background:linear-gradient(135deg,rgba(6,17,38,.96),rgba(8,14,31,.96));border:1px solid #2b416d;border-radius:5px;box-shadow:0 4px 16px #0005;color:#d9e8ff;font-family:Rajdhani,system-ui,sans-serif;min-height:112px;}
+ .msHeader,.msFooter{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10px;letter-spacing:1.2px;color:#a9c7ec;}
+ .msHeader{padding-bottom:5px;border-bottom:1px solid #203454;}
+ #turnStatus{font-family:Oxanium,sans-serif;color:#63dcff;font-size:10px;}
+ .msCores{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:7px 0 5px;}
+ .msCore>div:first-child{display:flex;justify-content:space-between;align-items:center;gap:5px;font-size:10px;letter-spacing:.6px;}
+ .msCore b{font-family:Oxanium,sans-serif;font-size:13px;color:#f4f9ff;}
+ .msBar{height:5px;background:#16213c;border:1px solid #405071;border-radius:8px;overflow:hidden;margin-top:4px;}
+ .msBar i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#35dfff,#236dff);}
+ .msRed .msBar i{background:linear-gradient(90deg,#ff5d7e,#bb204a);}
+ .msFooter{font-size:9px;letter-spacing:.7px;padding-top:4px;border-top:1px solid #203454;}
+}
+
+
+/* Battle tokens: show the matching character face as the head and a team-lit fighter silhouette beneath it. */
+.fighter{width:clamp(34px,4.2vw,56px);height:clamp(58px,7vw,84px);background:transparent;filter:drop-shadow(0 6px 5px #000b);}
+.fighter:before{content:"";position:absolute;z-index:0;left:12%;right:12%;top:37%;bottom:1%;clip-path:polygon(31% 0,69% 0,100% 23%,84% 100%,16% 100%,0 23%);background:linear-gradient(180deg,var(--team),rgba(8,13,29,.98) 88%);border:1px solid var(--team);box-shadow:0 0 13px var(--team);}
+.fighter img{position:absolute;z-index:2;left:18%;top:2%;width:64%;height:54%;object-fit:cover;object-position:48% 34%;clip-path:none!important;border-radius:50%!important;border:2px solid var(--team)!important;background:#10172d;box-shadow:0 0 11px var(--team);}
+.fighter:after{inset:35% 10% 0;z-index:1;clip-path:polygon(31% 0,69% 0,100% 23%,84% 100%,16% 100%,0 23%)!important;border:1px solid var(--team);border-radius:3px!important;}
+.fighter .hp{top:-7px;z-index:4;}
+.fighter .lvl{bottom:-10px;z-index:4;font-size:10px;white-space:nowrap;}
+@media(max-width:760px) and (orientation:portrait){
+ .fighter{width:clamp(32px,8.7vw,44px);height:clamp(48px,12vw,62px);}
+ .fighter img{left:14%;width:72%;height:53%;top:1%;}
+ .fighter .lvl{font-size:9px;bottom:-11px;}
+}
+
+
+/* Separate hit areas for the artwork's Auto, x1, pause controls; add an unobtrusive exit control. */
+.hotAuto,.hotSpeed,.hotPause{position:absolute;display:block;padding:0;border:1px solid transparent;background:transparent;pointer-events:auto;right:0;width:5.2%;height:7.4%;border-radius:6px;touch-action:manipulation;}
+.hotAuto{top:56.1%;}
+.hotSpeed{top:64.2%;}
+.hotPause{top:72.2%;}
+.hotExit{position:absolute;right:1%;top:11%;width:5.5%;height:4%;z-index:12;padding:0;border:1px solid #45618e;border-radius:5px;background:rgba(4,10,24,.76);color:#d7eeff;font-family:Oxanium,sans-serif;font-size:clamp(8px,.9vw,12px);letter-spacing:.3px;pointer-events:auto;touch-action:manipulation;}
+@media(max-width:760px) and (orientation:portrait){.hotAuto,.hotSpeed,.hotPause,.hotExit{display:none!important;}}
+.hotAuto.selected{background:#49ddff30!important;border:1px solid #6deaff!important;box-shadow:0 0 18px #39cfff88;}
+
+</style></head><body><div class="screen" id="home"><div class="topline"></div><nav class="nav"><div><div class="logo">MYTHIC <span>CLASH</span></div><div class="sub">STRATEGY&nbsp; × &nbsp;POWER&nbsp; × &nbsp;LEGEND</div></div><button class="pill" id="howBtn">HOW TO PLAY ↗</button></nav><main class="hero"><div class="heroArt"></div><section class="heroCopy"><div class="eyebrow">✦ THE ARENA AWAITS ✦</div><h1>Build your<br>legend.<br><em>Change fate.</em></h1><p>Deploy your champions. Outsmart the enemy. Every ability can change the rules of battle.</p><div class="features"><span>REAL-TIME STRATEGY</span><span>ANIME CHAMPIONS</span><span>ADAPTIVE AI</span></div><div class="heroButtons"><button class="primary" id="playBtn">ENTER THE ARENA ↗</button><button class="secondary" id="friendBtn">FRIEND BATTLE</button></div></section><div class="rosterStrip"><div class="miniCard"><img src="assets/kael.jpg"><b>KAEL · WARRIOR</b></div><div class="miniCard"><img src="assets/aurelia.jpg"><b>AURELIA · MAGE</b></div><div class="miniCard"><img src="assets/sylvaine.jpg"><b>SYLVAINE · HEALER</b></div><div class="miniCard"><img src="assets/seraphine.jpg"><b>SERAPHINE · GUARD</b></div><div class="miniCard"><img src="assets/darius.jpg"><b>DARIUS · ASSASSIN</b></div></div></main></div>
+<div class="modal" id="setup"><div class="dialog"><h2>CHOOSE YOUR BATTLE</h2><div class="muted">Set the challenge before the gates open.</div><div class="optionGrid" id="modes"><button class="option selected" data-mode="ai"><b>⚔ SOLO VS AI</b><small>Adaptive opponent · one player</small></button><button class="option" data-mode="friend"><b>⚡ LOCAL FRIEND</b><small>Take turns on one device</small></button><button class="option" data-diff="standard"><b>STANDARD</b><small>Learn the lanes</small></button><button class="option" data-diff="adaptive"><b>ADAPTIVE</b><small>AI counters your strategy</small></button><button class="option" data-diff="nightmare"><b>NIGHTMARE</b><small>Fast pressure · smarter counters</small></button></div><div class="dialogActions"><button class="secondary" id="cancelSetup">BACK</button><button class="primary" id="launch">START MATCH</button></div><p class="smallNote">Friend battle is local pass-and-play, not online matchmaking.</p></div></div>
+<div class="game" id="game"><header class="gameTop"><div class="gameLogo">MYTHIC <span style="color:#9b76ff">CLASH</span></div><div class="scores"><span class="scoreBlue">◆ <b id="blueScore">1</b></span><span class="timer" id="timer">03:00</span><span class="scoreRed"><b id="redScore">1</b> ◆</span></div><button class="pill" id="exitBtn">✕ EXIT</button></header><div class="arenaWrap" id="arena"><div class="arenaBG"></div><div class="laneLine"></div>
+<div class="artHotspots" id="artHotspots" aria-label="Battle interface controls">
+  <button class="hotCard" data-card="kael" aria-label="Deploy Kael"></button><button class="hotCard" data-card="aurelia" aria-label="Deploy Aurelia"></button><button class="hotCard" data-card="sylvaine" aria-label="Deploy Sylvaine"></button><button class="hotCard" data-card="seraphine" aria-label="Deploy Seraphine"></button><button class="hotCard" data-card="darius" aria-label="Deploy Darius"></button>
+  <button class="hotAbility" data-ult="kael" aria-label="Spirit Bomb"></button><button class="hotAbility" data-ult="aurelia" aria-label="Time Lock"></button><button class="hotAbility" data-ult="seraphine" aria-label="Reality Shield"></button><button class="hotAbility" data-ult="sylvaine" aria-label="Life Sanctuary"></button><button class="hotAbility" data-ult="darius" aria-label="Ultimate"></button>
+  <button class="hotAuto" id="artAuto" aria-label="Toggle automatic deployment"></button><button class="hotSpeed" id="artSpeed" aria-label="Change game speed"></button><button class="hotPause" id="artPause" aria-label="Pause game"></button><button class="hotExit" id="artExit" aria-label="Exit match">EXIT</button>
+  <div class="liveReadout"><span id="artTimer">03:00</span><span>ENERGY <b id="artEnergy">6</b></span></div>
+  <div class="screenFlash" id="screenFlash"></div>
+</div><div class="tower blue" id="blueTower"><div class="towerBar"><i id="blueHPBar"></i></div>◆<strong id="blueHP">4200</strong>CORE</div><div class="tower red" id="redTower"><div class="towerBar"><i id="redHPBar"></i></div>◆<strong id="redHP">4200</strong>CORE</div><div class="battleToast" id="battleToast">DEPLOY A CHAMPION TO BEGIN</div><div class="endOverlay" id="endOverlay"><div class="endBox"><h2 id="endTitle">VICTORY</h2><p id="endText">The arena belongs to you.</p><button class="primary" id="againBtn">PLAY AGAIN</button></div></div></div><section class="bottomHUD"><div class="hand" id="hand"></div><aside class="rightHUD"><div class="energy"><div style="font-size:10px;letter-spacing:2px">ENERGY</div><strong id="energyNum">6</strong><div class="energyBar"><i id="energyBar"></i></div></div><button class="ability" id="ultBtn">✦ ULTIMATE<br><span id="ultName">SPIRIT BOMB</span></button></aside></section><section class="mobileStatus" id="mobileStatus" aria-label="Live battle status"><div class="msHeader"><b>TACTICAL STATUS</b><span id="turnStatus">BLUE TURN</span></div><div class="msCores"><div class="msCore msBlue"><div><span>BLUE CORE</span><b id="mobileBlueHP">4200</b></div><div class="msBar"><i id="mobileBlueBar"></i></div></div><div class="msCore msRed"><div><span>RED CORE</span><b id="mobileRedHP">4200</b></div><div class="msBar"><i id="mobileRedBar"></i></div></div></div><div class="msFooter"><span id="mobileUnitStatus">0 champions deployed</span><span>DESTROY THE ENEMY CORE</span></div></section><div class="controls"><span id="hint">Tap a champion card, then tap your half of the arena to deploy.</span><span><button id="pauseBtn">Ⅱ PAUSE</button> <button id="speedBtn">×1 SPEED</button> <button id="autoBtn">AUTO</button></span></div></div>
+<div class="modal" id="help"><div class="dialog"><h2>HOW TO PLAY</h2><p>Tap a champion card, then tap your side of the arena to deploy it. Fighters move and attack automatically. Protect your core and destroy the enemy core before time runs out.</p><p>Use your Ultimate when the energy meter is charged. In Adaptive mode, the AI watches which champions you rely on and changes its response.</p><div class="dialogActions"><button class="primary" id="closeHelp">GOT IT</button></div></div></div><div id="toast" class="toastMsg hidden"></div>
+<script>
+'use strict';
+const chars=[
+ {id:'kael',name:'Kael',title:'Dreadbane',cost:4,hp:740,atk:112,range:92,speed:22,role:'WARRIOR',ult:'SPIRIT BOMB',desc:'Burst damage',color:'#4ddfff'},
+ {id:'aurelia',name:'Aurelia',title:'Fateborn',cost:5,hp:620,atk:95,range:165,speed:18,role:'MAGE',ult:'TIME LOCK',desc:'Stuns enemies',color:'#ffd67c'},
+ {id:'sylvaine',name:'Sylvaine',title:'Ashveil',cost:3,hp:560,atk:58,range:140,speed:17,role:'HEALER',ult:'LIFE SANCTUARY',desc:'Heals allies',color:'#69f4bc'},
+ {id:'seraphine',name:'Seraphine',title:'Lifeward',cost:4,hp:820,atk:52,range:88,speed:15,role:'GUARD',ult:'REALITY SHIELD',desc:'Shields allies',color:'#a88bff'},
+ {id:'darius',name:'Darius',title:'Nightbane',cost:6,hp:540,atk:148,range:85,speed:28,role:'ASSASSIN',ult:'SHADOW REND',desc:'High single-target damage',color:'#ff597f'}
+];
+const $=id=>document.getElementById(id);
+let mode='ai',difficulty='adaptive',state=null,loop=null,last=0,paused=false,speed=1,selected=null,friendTurn=0,aiMemory={},used={},autoPlay=false;
+function portraitMode(){return window.matchMedia('(max-width:760px) and (orientation:portrait)').matches;}
+function fieldBounds(){return portraitMode()?{left:.025,top:.07,width:.95,height:.86}:{left:.135,top:.18,width:.82,height:.53};}
+function toScreen(u){const b=fieldBounds();return{x:b.left+u.x*b.width,y:b.top+u.y*b.height};}
+function currentTeam(){return mode==='friend'&&friendTurn===1?'red':'blue';}
+function energyFor(team){return state?state[team+'Energy']:0;}
+function setEnergy(team,value){if(state)state[team+'Energy']=Math.max(0,Math.min(10,value));}
+function spendsEnergy(team){return mode==='friend'||team==='blue'||(mode==='ai'&&team==='red');}
+function showToast(t){$('toast').textContent=t;$('toast').classList.remove('hidden');clearTimeout(showToast.t);showToast.t=setTimeout(()=>$('toast').classList.add('hidden'),2100);}
+function openSetup(m){mode=m||'ai';document.querySelectorAll('[data-mode]').forEach(b=>b.classList.toggle('selected',b.dataset.mode===mode));$('setup').classList.add('show');}
+$('playBtn').onclick=()=>openSetup('ai');$('friendBtn').onclick=()=>openSetup('friend');$('cancelSetup').onclick=()=>$('setup').classList.remove('show');$('howBtn').onclick=()=>$('help').classList.add('show');$('closeHelp').onclick=()=>$('help').classList.remove('show');
+document.querySelectorAll('[data-mode]').forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll('[data-mode]').forEach(x=>x.classList.toggle('selected',x===b));});
+document.querySelectorAll('[data-diff]').forEach(b=>b.onclick=()=>{difficulty=b.dataset.diff;document.querySelectorAll('[data-diff]').forEach(x=>x.classList.toggle('selected',x===b));});
+function clearBattleObjects(){document.querySelectorAll('#arena .fighter,#arena .projectile').forEach(el=>el.remove());}
+function launch(){
+ if(loop!==null)cancelAnimationFrame(loop);
+ clearBattleObjects();$('setup').classList.remove('show');$('home').style.display='none';$('game').classList.add('active');
+ state={time:180,blueEnergy:6,redEnergy:6,blueHP:4200,redHP:4200,units:[],nextId:0,over:false,aiTimer:2.4,autoTimer:1.3,aiUltTimer:8,redUlt:0,ultCooldown:{blue:0,red:0}};
+ paused=false;speed=1;selected=null;friendTurn=0;aiMemory={};used={};autoPlay=false;$('autoBtn').textContent='AUTO';$('artAuto').classList.remove('selected');
+ $('endOverlay').classList.remove('show');$('pauseBtn').textContent='Ⅱ PAUSE';$('speedBtn').textContent='×1 SPEED';
+ $('hint').textContent=mode==='friend'?'BLUE PLAYER: select a champion, then tap the left half.':'Select a champion, then tap your side of the arena.';
+ document.querySelectorAll('.hotCard').forEach(x=>x.classList.remove('selected'));renderHand();render();last=performance.now();loop=requestAnimationFrame(tick);
+ toastBattle(mode==='friend'?'LOCAL FRIEND BATTLE — BLUE PLAYER STARTS':'MATCH START — DEPLOY YOUR CHAMPIONS');
+}
+$('launch').onclick=launch;
+function exitMatch(){if(loop!==null)cancelAnimationFrame(loop);loop=null;state=null;clearBattleObjects();autoPlay=false;$('game').classList.remove('active');$('home').style.display='block';$('setup').classList.remove('show');selected=null;}
+$('exitBtn').onclick=exitMatch;$('artExit').onclick=exitMatch;
+function toggleAuto(){if(mode==='friend'){showToast('Auto deployment is for Solo vs AI only.');return;}autoPlay=!autoPlay;$('autoBtn').textContent=autoPlay?'AUTO ON':'AUTO';$('artAuto').classList.toggle('selected',autoPlay);toastBattle(autoPlay?'AUTO DEPLOYMENT ON':'AUTO DEPLOYMENT OFF');}
+$('autoBtn').onclick=toggleAuto;$('artAuto').onclick=toggleAuto;$('artSpeed').onclick=()=>$('speedBtn').click();
+$('againBtn').onclick=launch;
+function selectCharacter(id){
+ if(!state||state.over||paused)return;const c=chars.find(v=>v.id===id);if(!c)return;
+ const team=currentTeam();if(energyFor(team)<c.cost){showToast(`${team==='blue'?'Blue':'Red'} needs ${c.cost} energy for ${c.name}.`);toastBattle('NOT ENOUGH ENERGY');return;}
+ selected=id;document.querySelectorAll('.hotCard').forEach(x=>x.classList.toggle('selected',x.dataset.card===id));document.querySelectorAll('.card').forEach(x=>x.classList.toggle('active',x.dataset.id===id));
+ $('ultName').textContent=c.ult;$('battleToast').textContent=`${c.name.toUpperCase()} SELECTED — TAP YOUR SIDE`;
+}
+function renderHand(){
+ $('hand').innerHTML='';chars.forEach(c=>{const b=document.createElement('button');b.className='card';b.dataset.id=c.id;b.setAttribute('aria-label',`Select ${c.name}, cost ${c.cost} energy`);
+ b.innerHTML=`<span class="cost">${c.cost}</span><img src="assets/${c.id}.jpg" alt="${c.name} portrait"><span class="cardText"><b>${c.name.toUpperCase()}</b><small>${c.role} · ${c.cost} EN</small></span>`;
+ b.onclick=()=>selectCharacter(c.id);$('hand').appendChild(b);});
+}
+document.querySelectorAll('.hotCard').forEach(b=>b.onclick=()=>selectCharacter(b.dataset.card));
+document.querySelectorAll('.hotAbility').forEach(b=>b.onclick=()=>{if(!state||state.over||paused)return;useUlt(currentTeam(),b.dataset.ult);$('screenFlash').classList.remove('flash');void $('screenFlash').offsetWidth;$('screenFlash').classList.add('flash');});
+$('artPause').onclick=()=>$('pauseBtn').click();
+$('arena').addEventListener('click',e=>{
+ if(!state||state.over||paused||e.target.closest('button'))return;
+ const rect=$('arena').getBoundingClientRect(),rawX=(e.clientX-rect.left)/rect.width,rawY=(e.clientY-rect.top)/rect.height,b=fieldBounds();
+ if(rawX<b.left||rawX>b.left+b.width||rawY<b.top||rawY>b.top+b.height)return;
+ if(!selected){showToast('Choose a champion card first.');return;}
+ const x=Math.max(0,Math.min(1,(rawX-b.left)/b.width)),y=Math.max(.06,Math.min(.94,(rawY-b.top)/b.height));
+ const team=currentTeam();
+ if(mode!=='friend'&&x>.5){showToast('Deploy on the blue (left) side.');return;}
+ if(mode==='friend'&&((team==='blue'&&x>.5)||(team==='red'&&x<.5))){showToast(team==='blue'?'Blue deploys on the left half.':'Red deploys on the right half.');return;}
+ if(deploy(selected,team,x,y,false)){
+   selected=null;document.querySelectorAll('.card').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.hotCard').forEach(x=>x.classList.remove('selected'));
+   if(mode==='friend'){friendTurn=1-friendTurn;$('hint').textContent=friendTurn===0?'BLUE PLAYER: select a champion, then tap the left half.':'RED PLAYER: select a champion, then tap the right half.';}
+   render();
+ }
+});
+function deploy(id,team,x,y,fromAI=false){
+ const c=chars.find(v=>v.id===id);if(!c||!state)return false;
+ if(spendsEnergy(team)){if(energyFor(team)<c.cost){if(!fromAI)showToast(`Not enough ${team==='blue'?'blue':'red'} energy.`);return false;}setEnergy(team,energyFor(team)-c.cost);}
+ const finalX=team==='blue'?Math.max(.035,Math.min(.47,x)):Math.max(.53,Math.min(.965,x));
+ const hp=c.hp*(difficulty==='nightmare'&&team==='red'?1.16:1);
+ const u={id:++state.nextId,team,char:c,hp,maxhp:hp,atk:c.atk*(team==='red'&&difficulty==='nightmare'?1.15:1),x:finalX,y:Math.max(.08,Math.min(.92,y)),attackTick:.2+Math.random()*.4,alive:true};
+ state.units.push(u);renderUnit(u);
+ if(team==='blue'&&!fromAI){used[id]=(used[id]||0)+1;aiMemory[id]=(aiMemory[id]||0)+1;}
+ toastBattle(`${team==='blue'?'BLUE':'RED'} · ${c.name.toUpperCase()} DEPLOYED`);render();return true;
+}
+function renderUnit(u){
+ const el=document.createElement('div');el.className=`fighter ${u.team==='blue'?'ally':'enemy'}`;el.dataset.unit=u.id;
+ const s=toScreen(u);el.style.left=(s.x*100)+'%';el.style.top=(s.y*100)+'%';el.style.setProperty('--team',u.team==='blue'?'#56dfff':'#ff456c');
+ el.innerHTML=`<div class="hp"><i></i></div><img src="assets/sprite-${u.char.id}.jpg" alt="${u.char.name}" onerror="this.onerror=null;this.src='assets/${u.char.id}.jpg'"><span class="lvl">${u.char.name}</span>`;
+ $('arena').appendChild(el);u.el=el;
+}
+function toastBattle(t){$('battleToast').textContent=t;$('battleToast').style.opacity='1';clearTimeout(toastBattle.t);toastBattle.t=setTimeout(()=>{if($('battleToast'))$('battleToast').style.opacity='.22';},1900);}
+function bolt(a,b){
+ const el=document.createElement('div');el.className='projectile';const A=toScreen(a),B=toScreen(b);el.style.left=(A.x*100)+'%';el.style.top=(A.y*100)+'%';$('arena').appendChild(el);
+ const dx=(B.x-A.x)*$('arena').clientWidth,dy=(B.y-A.y)*$('arena').clientHeight;
+ if(el.animate)el.animate([{transform:'translate(0,0) scale(.5)',opacity:1},{transform:`translate(${dx}px,${dy}px) scale(1.7)`,opacity:0}],{duration:450,easing:'ease-out'});
+ setTimeout(()=>el.remove(),480);
+}
+function nearest(u){const targets=state.units.filter(v=>v.alive&&v.team!==u.team);if(!targets.length)return null;targets.sort((a,b)=>Math.hypot(a.x-u.x,a.y-u.y)-Math.hypot(b.x-u.x,b.y-u.y));return targets[0];}
+function useUlt(team,id=null,fromAI=false){
+ if(!state||state.over)return false;
+ const nowChar=chars.find(c=>c.id===(id||selected))||chars[0];
+ if(state.ultCooldown[team]>0){if(!fromAI)showToast(`Ultimate recharging: ${Math.ceil(state.ultCooldown[team])}s`);return false;}
+ const cost=({kael:3,aurelia:4,seraphine:4,sylvaine:5,darius:6})[nowChar.id]||5;
+ if(spendsEnergy(team)&&energyFor(team)<cost){if(!fromAI)showToast(`Need ${cost} ${team==='blue'?'blue':'red'} energy for ${nowChar.ult}.`);return false;}
+ if(spendsEnergy(team))setEnergy(team,energyFor(team)-cost);
+ state.ultCooldown[team]=3.5;
+ const allies=state.units.filter(u=>u.alive&&u.team===team),foes=state.units.filter(u=>u.alive&&u.team!==team);
+ if(nowChar.id==='sylvaine'){allies.forEach(u=>u.hp=Math.min(u.maxhp,u.hp+180));}
+ else if(nowChar.id==='seraphine'){allies.forEach(u=>u.hp=Math.min(u.maxhp,u.hp+120));foes.forEach(u=>u.atk*=.8);}
+ else if(nowChar.id==='aurelia'){foes.forEach(u=>{u.stun=2.8;u.hp-=90;});}
+ else {const dmg=nowChar.id==='darius'?240:200;foes.forEach(u=>u.hp-=dmg);if(!foes.length){if(team==='blue')state.redHP-=260;else state.blueHP-=260;}}
+ cleanupDead();
+ const message=team==='red'?`ENEMY ${nowChar.ult} ACTIVATED`:`${nowChar.ult} ACTIVATED`;
+ if(!fromAI)showToast(message);toastBattle(message);
+ allies.forEach(u=>{if(u.el){u.el.classList.add('hit');setTimeout(()=>u.el&&u.el.classList.remove('hit'),250);}});
+ render();return true;
+}
+function cleanupDead(){for(const u of state.units){if(u.hp<=0&&u.alive){u.alive=false;if(u.el)u.el.remove();}}state.units=state.units.filter(u=>u.alive);}
+$('ultBtn').onclick=()=>useUlt(currentTeam(),selected||'kael');
+function render(){
+ if(!state)return;
+ const team=currentTeam(),e=energyFor(team);$('energyNum').textContent=Math.floor(e);$('energyBar').style.width=(e/10*100)+'%';$('artEnergy').textContent=Math.floor(e);
+ $('blueHP').textContent=Math.max(0,Math.round(state.blueHP));$('redHP').textContent=Math.max(0,Math.round(state.redHP));
+ $('blueHPBar').style.width=Math.max(0,state.blueHP/42)+'%';$('redHPBar').style.width=Math.max(0,state.redHP/42)+'%';
+ $('timer').textContent=`${String(Math.floor(Math.max(0,state.time)/60)).padStart(2,'0')}:${String(Math.floor(Math.max(0,state.time)%60)).padStart(2,'0')}`;$('artTimer').textContent=$('timer').textContent;
+ $('blueScore').textContent=state.blueHP>0?'1':'0';$('redScore').textContent=state.redHP>0?'1':'0';
+ const c=chars.find(x=>x.id===selected)||chars[0];$('ultName').textContent=state.ultCooldown[team]>0?`${Math.ceil(state.ultCooldown[team])}s`:c.ult;
+ $('mobileBlueHP').textContent=Math.max(0,Math.round(state.blueHP));$('mobileRedHP').textContent=Math.max(0,Math.round(state.redHP));$('mobileBlueBar').style.width=Math.max(0,state.blueHP/4200*100)+'%';$('mobileRedBar').style.width=Math.max(0,state.redHP/4200*100)+'%';
+ $('turnStatus').textContent=mode==='friend'?(team==='blue'?'BLUE PLAYER TURN':'RED PLAYER TURN'):'YOU VS AI';const bc=state.units.filter(u=>u.alive&&u.team==='blue').length,rc=state.units.filter(u=>u.alive&&u.team==='red').length;$('mobileUnitStatus').textContent=`${bc} BLUE · ${rc} RED CHAMPIONS`;
+ for(const u of state.units){if(u.el){const s=toScreen(u);u.el.style.left=(s.x*100)+'%';u.el.style.top=(s.y*100)+'%';const hp=u.el.querySelector('.hp i');if(hp)hp.style.width=Math.max(0,u.hp/u.maxhp*100)+'%';u.el.style.opacity=u.alive?1:0;}}
+}
+function aiStep(dt){
+ if(mode!=='ai'||!state)return;
+ state.aiTimer-=dt;state.aiUltTimer-=dt;
+ if(state.aiTimer<=0){
+   const affordable=chars.filter(c=>c.cost<=energyFor('red'));
+   if(affordable.length){
+     let best;
+     if(difficulty==='standard')best=affordable[Math.floor(Math.random()*affordable.length)];
+     else{
+       const popular=Object.entries(aiMemory).sort((a,b)=>b[1]-a[1])[0]?.[0];
+       const counters={aurelia:'kael',kael:'seraphine',seraphine:'darius',darius:'aurelia',sylvaine:'darius'};
+       best=affordable.find(c=>c.id===counters[popular])||affordable.slice().sort((a,b)=>a.cost-b.cost)[0];
+       if(difficulty==='nightmare'&&Math.random()<.5){best=affordable.find(c=>c.id==='darius')||best;}
+     }
+     const laneY=[.30,.5,.7][Math.floor(Math.random()*3)];deploy(best.id,'red',.88,laneY,true);
+     state.aiTimer=difficulty==='standard'?5.1:difficulty==='nightmare'?2.15:3.25;
+   }else{
+     // Never strand the AI because it picked a champion it cannot afford.
+     state.aiTimer=.55;
+   }
+ }
+ if(difficulty==='nightmare'&&state.aiUltTimer<=0&&energyFor('red')>=4){
+   const affordableUlt=chars.filter(c=>c.cost<=energyFor('red')).sort((a,b)=>b.atk-a.atk)[0];
+   if(affordableUlt&&state.ultCooldown.red<=0)useUlt('red',affordableUlt.id,true);
+   state.aiUltTimer=7.5;
+ }
+}
+function endMatch(){
+ state.over=true;const win=state.redHP<=0||(state.blueHP>state.redHP&&state.time<=0);
+ $('endTitle').textContent=win?'VICTORY':'DEFEAT';$('endTitle').style.color=win?'#66e8ff':'#ff6280';
+ $('endText').textContent=win?'The enemy core has fallen. The arena is yours.':'Your core has fallen. Adapt your strategy and try again.';$('endOverlay').classList.add('show');
+}
+function tick(t){
+ if(!state||!$('game').classList.contains('active')){loop=null;return;}
+ let dt=Math.min(.05,Math.max(0,(t-last)/1000));last=t;
+ if(!paused&&!state.over){
+   dt*=speed;state.time=Math.max(0,state.time-dt);
+   setEnergy('blue',energyFor('blue')+dt*.36);setEnergy('red',energyFor('red')+dt*(difficulty==='nightmare'?.48:.36));
+   state.ultCooldown.blue=Math.max(0,state.ultCooldown.blue-dt);state.ultCooldown.red=Math.max(0,state.ultCooldown.red-dt);
+   aiStep(dt);
+   if(autoPlay&&mode==='ai'){
+     state.autoTimer-=dt;
+     if(state.autoTimer<=0){const affordable=chars.filter(c=>c.cost<=energyFor('blue'));if(affordable.length){const pick=affordable.slice().sort((a,b)=>(used[a.id]||0)-(used[b.id]||0)||a.cost-b.cost)[0];deploy(pick.id,'blue',.2,[.32,.5,.68][Math.floor(Math.random()*3)],false);}state.autoTimer=3.4;}
+   }
+   for(const u of state.units){if(!u.alive)continue;u.attackTick-=dt;if(u.stun>0){u.stun-=dt;continue;}
+     const target=nearest(u);
+     if(target){const d=Math.hypot(target.x-u.x,target.y-u.y);if(d>.09){const step=u.char.speed*dt/100;u.x+=(target.x-u.x)/d*step;u.y+=(target.y-u.y)/d*step;u.x=Math.max(.02,Math.min(.98,u.x));u.y=Math.max(.06,Math.min(.94,u.y));}
+       else if(u.attackTick<=0){target.hp-=u.atk;bolt(u,target);u.attackTick=.75;if(target.hp<=0){target.alive=false;if(target.el)target.el.remove();}}
+     }else{const coreX=u.team==='blue'?.97:.03,dx=coreX-u.x;if(Math.abs(dx)>.07){u.x+=Math.sign(dx)*u.char.speed*dt/1000;u.x=Math.max(.02,Math.min(.98,u.x));}
+       else if(u.attackTick<=0){if(u.team==='blue')state.redHP-=u.atk*.48;else state.blueHP-=u.atk*.48;u.attackTick=.8;}}
+     if(u.hp<=0){u.alive=false;if(u.el)u.el.remove();}
+   }
+   cleanupDead();
+   if(state.time<=0||state.blueHP<=0||state.redHP<=0)endMatch();
+   render();
+ }
+ loop=requestAnimationFrame(tick);
+}
+$('pauseBtn').onclick=()=>{paused=!paused;$('pauseBtn').textContent=paused?'▶ RESUME':'Ⅱ PAUSE';toastBattle(paused?'MATCH PAUSED':'MATCH RESUMED');};
+window.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('game').classList.contains('active'))exitMatch();});
+$('speedBtn').onclick=()=>{speed=speed===1?1.5:speed===1.5?2:1;$('speedBtn').textContent='×'+speed+' SPEED';};
+window.addEventListener('resize',()=>{if(state)render();});
+</script></body></html>
