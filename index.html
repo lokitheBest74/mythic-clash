@@ -46,7 +46,11 @@ p{margin:0}
 
 /* ---------- layout shell ---------- */
 .shell{max-width:1100px;margin:0 auto;min-height:100vh;padding-bottom:96px}
-body.in-battle .shell{padding-bottom:0}
+body.in-battle .shell{padding-bottom:0;min-height:0}
+/* In battle the screen is a fixed 100dvh layout (no page scroll), so the
+   action bar always sits above the iOS Safari bottom toolbar. */
+body.in-battle{overflow:hidden}
+body.in-battle .main{padding:0}
 .top{position:sticky;top:0;z-index:40;display:flex;align-items:center;gap:12px;
   padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.07);
   background:rgba(9,13,23,.92);backdrop-filter:blur(14px)}
@@ -160,6 +164,10 @@ body.in-battle .bottomnav{display:none}
    shows a broken-image icon — the img just hides itself (see imgArt()). */
 .portrait{position:relative;overflow:hidden;background:linear-gradient(160deg,#1a2540,#0d1326)}
 .portrait img{width:100%;height:100%;object-fit:cover;object-position:center top;position:relative;z-index:1}
+/* The 4 original portrait files have a baked-in "Name Lv." plate across the
+   bottom ~22%. Zoom from the top so the plate falls outside the frame
+   (the 7 generated portraits have no plate and are never cropped). */
+.portrait img.crop-plate{transform:scale(1.3);transform-origin:top center}
 /* Animated placeholder for characters whose art is not drawn yet.
    Element colour comes from --ec, set inline per character. */
 .art-ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
@@ -220,13 +228,14 @@ body.in-battle .bottomnav{display:none}
 .chapter.cleared .ch-num b{color:var(--green)}
 /* story dialogue scene */
 .story-scene{position:fixed;inset:0;z-index:60;background:linear-gradient(180deg,#060912,#0b1121);
-  display:flex;flex-direction:column;overflow:hidden}
+  display:flex;flex-direction:column;overflow:hidden;height:100dvh}
 .story-bg{position:absolute;inset:0;opacity:.35}
 .story-bg img{width:100%;height:100%;object-fit:cover}
 .story-scene .scene-top{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:14px}
-.story-char{position:relative;z-index:1;flex:1;display:flex;align-items:flex-end;justify-content:center;min-height:0}
-.story-char .portrait{width:min(78vw,340px);height:min(52vh,420px);border-radius:18px 18px 0 0;
-  border:1px solid var(--line);border-bottom:0;box-shadow:0 -10px 50px rgba(0,0,0,.6)}
+.story-char{position:relative;z-index:1;flex:1;display:flex;align-items:center;justify-content:center;min-height:0;
+  background:radial-gradient(ellipse at 50% 55%,rgba(98,234,255,.14),transparent 62%)}
+.story-char .portrait{width:min(54vw,230px);height:min(36vh,290px);border-radius:18px;
+  border:1px solid var(--line);box-shadow:0 14px 44px rgba(0,0,0,.65),0 0 34px rgba(98,234,255,.12)}
 .story-char .portrait img{object-position:center top}
 .dialog-box{position:relative;z-index:2;margin:0 12px calc(14px + env(safe-area-inset-bottom));border:1px solid var(--line);
   border-radius:16px;background:rgba(10,15,27,.94);backdrop-filter:blur(10px);padding:16px 16px 14px;min-height:150px}
@@ -293,26 +302,35 @@ body.in-battle .bottomnav{display:none}
 body.in-battle .toast{bottom:24px}
 
 /* ---------- battle ---------- */
-.battle{display:flex;flex-direction:column;min-height:100dvh}
-.battle-top{display:flex;align-items:center;gap:10px;padding:10px 12px;background:#080d18;
-  border-bottom:1px solid #2a3650;position:sticky;top:0;z-index:10}
-.battle-top .bt-title{font:800 15px var(--head);letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.battle-top .bt-sub{font-size:11px;color:var(--muted);letter-spacing:1px}
-.energy-pips{margin-left:auto;display:flex;align-items:center;gap:4px;flex-shrink:0}
-.energy-pips .ep{width:13px;height:13px;border-radius:50%;border:1px solid #3d5a8a;background:#131d2d}
-.energy-pips .ep.on{background:var(--cyan);box-shadow:0 0 8px var(--cyan);border-color:var(--cyan)}
-.energy-num{font:800 13px var(--head);color:var(--cyan);min-width:30px;text-align:right}
-.stage{position:relative;overflow:hidden;flex:1;min-height:340px;
+.battle{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+.battle-top{padding:8px 10px 6px;background:#080d18;border-bottom:1px solid #2a3650;flex-shrink:0}
+.bt-row1{display:flex;align-items:center;gap:8px}
+.bt-title{flex:1;min-width:0;font:800 14px var(--head);letter-spacing:.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bt-timer{font:800 13px var(--head);color:var(--gold);flex-shrink:0;font-variant-numeric:tabular-nums}
+.bt-row2{display:flex;align-items:center;gap:8px;margin-top:6px}
+.score{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
+.sc-num{font:800 12px var(--head);font-variant-numeric:tabular-nums;flex-shrink:0}
+.sc-num.ally{color:var(--cyan)} .sc-num.enemy{color:var(--red)}
+.sc-track{flex:1;height:8px;border-radius:99px;background:#1c2942;overflow:hidden;display:flex}
+.sc-track i{display:block;height:100%;transition:width .4s}
+.sc-track .sc-a{background:linear-gradient(90deg,#388dff,var(--cyan))}
+.sc-track .sc-e{background:linear-gradient(90deg,#ff3f6c,#ffb08d)}
+.bt-controls{display:flex;gap:6px;flex-shrink:0}
+.ctl-btn{min-height:30px;padding:4px 9px;border-radius:8px;border:1px solid #354864;background:#111d30;
+  font:800 11px var(--head);letter-spacing:.5px;color:#c6d2e4}
+.ctl-btn.on{background:linear-gradient(120deg,#1a6fe6,#7955e7);border-color:#82cbff55;color:#fff}
+.ctl-btn:active{transform:scale(.95)}
+.stage{position:relative;overflow:hidden;flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center;
   background:radial-gradient(ellipse at 50% 0%,#1a2a55,#0b1121 70%)}
 .stage>img.stage-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.75}
 .stage::after{content:"";position:absolute;inset:0;pointer-events:none;
   background:linear-gradient(0deg,rgba(7,11,21,.92) 0%,transparent 30%,rgba(7,11,21,.25) 60%,rgba(7,11,21,.55) 100%)}
 .stage.shake{animation:shake .4s}
 @keyframes shake{0%,100%{transform:translate(0)}20%{transform:translate(-6px,3px)}40%{transform:translate(6px,-3px)}60%{transform:translate(-4px,-2px)}80%{transform:translate(4px,2px)}}
-.fight-row{position:relative;z-index:2;display:flex;justify-content:center;gap:10px;padding:14px 10px 0}
-.fight-row.allies{padding-top:6px;padding-bottom:8px}
+.fight-row{position:relative;z-index:2;display:flex;justify-content:center;gap:10px;padding:8px 10px 0}
+.fight-row.allies{padding-top:4px;padding-bottom:6px}
 .fighter{width:31%;max-width:150px;text-align:center;position:relative;transition:transform .18s,opacity .3s,filter .3s}
-.fighter .f-art{height:118px;border-radius:12px;border:2px solid #5b7299;overflow:hidden;position:relative;
+.fighter .f-art{height:clamp(84px,12.5vh,118px);border-radius:12px;border:2px solid #5b7299;overflow:hidden;position:relative;
   background:linear-gradient(165deg,#14294a,#101320 65%,#301326);box-shadow:0 10px 22px rgba(0,0,0,.5)}
 .fighter.enemy .f-art{border-color:#ff6e8e}
 /* Rift Shadows look corrupted: hue-shifted art, real images and placeholders alike */
@@ -321,7 +339,8 @@ body.in-battle .toast{bottom:24px}
 .fighter.ally .f-art{border-color:#69e3ff}
 .fighter .f-art img{width:100%;height:100%;object-fit:cover;object-position:center top;position:relative;z-index:1}
 .fighter .f-art .art-ph .rune{font-size:38px}
-.fighter .f-name{font:800 12px var(--head);margin:6px 0 3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 5px #000}
+.f-ground{height:10px;margin:-3px 14% 1px;background:radial-gradient(ellipse at center,rgba(0,0,0,.6),transparent 70%);border-radius:50%}
+.fighter .f-name{font:800 11px var(--head);margin:4px 0 2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 2px 5px #000}
 .fighter .f-sub{font-size:10px;color:#c6d2e4;letter-spacing:.5px}
 .hpbar{height:9px;background:#20283a;border:1px solid rgba(255,255,255,.25);border-radius:99px;overflow:hidden;margin-top:4px}
 .hpbar i{display:block;height:100%;background:linear-gradient(90deg,#3ee8b0,#8effce);border-radius:99px;transition:width .45s ease}
@@ -343,6 +362,16 @@ body.in-battle .toast{bottom:24px}
 .fighter.hit{animation:hitFlash .35s}
 @keyframes hitFlash{0%{filter:brightness(2.4) saturate(.4)}100%{filter:brightness(1)}}
 .fighter.heal-glow .f-art{box-shadow:0 0 0 3px var(--green),0 0 26px rgba(128,255,209,.7)}
+.pause-veil{position:absolute;inset:0;z-index:6;display:none;place-items:center;text-align:center;
+  background:rgba(5,8,16,.72);backdrop-filter:blur(3px)}
+.battle.paused .pause-veil{display:grid}
+.pv-title{font:800 26px var(--head);letter-spacing:2px;margin-bottom:6px}
+.pause-veil p{color:var(--muted);font-size:14px;margin-bottom:14px}
+/* ×2 speed halves the CSS animation times (JS delays are halved in code). */
+.speed2 .fighter.lunge-ally,.speed2 .fighter.lunge-enemy{animation-duration:.22s}
+.speed2 .fighter.hit{animation-duration:.18s}
+.speed2 .dmg-num{animation-duration:.5s}
+.speed2 .stage.shake{animation-duration:.2s}
 .float-layer{position:absolute;inset:0;z-index:5;pointer-events:none;overflow:hidden}
 .dmg-num{position:absolute;font:800 26px var(--head);text-shadow:0 2px 8px #000,0 0 14px currentColor;
   animation:floatDmg 1s ease-out both;white-space:nowrap;transform:translate(-50%,-50%)}
@@ -353,16 +382,35 @@ body.in-battle .toast{bottom:24px}
 .turn-banner{position:relative;z-index:2;text-align:center;padding:2px 0 0}
 .turn-banner span{display:inline-block;font:800 12px var(--head);letter-spacing:2px;color:var(--cyan);
   background:rgba(8,13,24,.8);border:1px solid rgba(98,234,255,.35);border-radius:99px;padding:4px 14px}
-.battle-log{padding:8px 14px;font-size:14px;color:#b7c5dc;min-height:40px;background:#0b111e;
-  border-top:1px solid #26334d;border-bottom:1px solid #26334d}
+.battle-log{padding:6px 12px;font-size:13px;color:#b7c5dc;min-height:28px;background:#0b111e;flex-shrink:0;
+  border-top:1px solid #26334d;border-bottom:1px solid #26334d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .battle-log b{color:#f1f7ff}
-.action-bar{padding:10px 12px calc(12px + env(safe-area-inset-bottom));background:#080d18;border-top:1px solid #2a3650}
-.action-bar .ab-unit{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-.action-bar .ab-unit .ab-portrait{width:46px;height:46px;border-radius:10px;overflow:hidden;border:1px solid var(--cyan);flex-shrink:0;position:relative}
-.action-bar .ab-unit .ab-portrait img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1}
-.action-bar .ab-unit b{font:700 14px var(--head);display:block}
-.action-bar .ab-unit small{color:var(--muted);font-size:12px}
-.action-bar .ab-end{margin-left:auto}
+.action-bar{padding:10px 12px calc(16px + env(safe-area-inset-bottom));background:#080d18;border-top:1px solid #2a3650;flex-shrink:0}
+.ab-energy{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.ab-e-track{flex:1;height:10px;border-radius:99px;background:#1c2942;overflow:hidden;border:1px solid #2a3650}
+.ab-e-track i{display:block;height:100%;background:linear-gradient(90deg,#388dff,var(--cyan));box-shadow:0 0 10px rgba(98,234,255,.5);transition:width .3s}
+.ab-e-num{font:800 13px var(--head);color:var(--cyan);font-variant-numeric:tabular-nums}
+.ab-end{margin-left:auto;min-height:32px!important;padding:5px 10px!important;font-size:12px!important}
+.ab-heroes{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:8px}
+.hero-card{position:relative;display:flex;align-items:center;gap:8px;padding:6px;border-radius:12px;
+  background:#111d30;border:2px solid #354864;text-align:left;min-width:0}
+.hero-card .hc-art{width:44px;height:44px;border-radius:8px;overflow:hidden;flex-shrink:0;position:relative;border:1px solid #4a5f85}
+.hero-card .hc-art img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1}
+.hero-card .hc-info{flex:1;min-width:0}
+.hero-card .hc-info b{display:block;font:700 12px var(--head);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hero-card .hc-hp{font-size:10px;color:#c6d2e4}
+.hero-card .hc-hpbar{display:block;height:6px;background:#20283a;border-radius:99px;overflow:hidden;margin-top:2px}
+.hero-card .hc-hpbar i{display:block;height:100%;background:linear-gradient(90deg,#3ee8b0,#8effce);transition:width .4s}
+.hero-card .hc-ultbar{display:block;height:3px;background:#20283a;border-radius:99px;overflow:hidden;margin-top:2px}
+.hero-card .hc-ultbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--pink))}
+.hero-card .hc-cost{position:absolute;top:-7px;right:-4px;width:22px;height:22px;border-radius:50%;
+  display:grid;place-items:center;font:800 12px var(--head);color:#0a0f1e;
+  background:linear-gradient(135deg,var(--cyan),#388dff);box-shadow:0 0 10px rgba(98,234,255,.6);border:1px solid #dff7ff}
+.hero-card.active{border-color:var(--cyan);box-shadow:0 0 0 2px rgba(98,234,255,.35),0 0 18px rgba(98,234,255,.3)}
+.hero-card.acted{opacity:.5}
+.hero-card.ko{opacity:.35;filter:grayscale(1)}
+.ab-status{padding:12px 4px;text-align:center;color:var(--muted);font-size:13px}
+.rotate-hint{display:none;text-align:center;font-size:11px;color:var(--muted);letter-spacing:.5px;margin-top:6px}
 .actions-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .action-btn{min-height:66px;border-radius:12px;padding:9px 8px;text-align:center;position:relative;
   background:#111d30;border:1px solid #354864;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
@@ -406,7 +454,11 @@ body.in-battle .toast{bottom:24px}
   .detail-grid .portrait{height:100%;min-height:340px}
   .fighter{max-width:170px}
   .fighter .f-art{height:150px}
-  .stage{min-height:420px}
+  .ab-main{display:flex;gap:10px;align-items:stretch}
+  .ab-heroes{flex:1.1;margin-bottom:0}
+  .ab-skills{flex:1}
+  .ab-skills .actions-grid{height:100%}
+  .hero-card .hc-art{width:52px;height:52px}
 }
 @media(min-width:1000px){
   .coll-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -417,6 +469,29 @@ body.in-battle .toast{bottom:24px}
   .fighter .f-art{height:100px}
   .char-card .portrait{height:140px}
   .stat-grid{grid-template-columns:repeat(2,1fr)}
+}
+/* Portrait phones: smaller fighters so the whole battle fits without scroll,
+   plus a hint that landscape gives the full arena view. */
+@media (max-width:600px) and (orientation:portrait){
+  .rotate-hint{display:block}
+  .fighter .f-art{height:clamp(72px,11.5vh,100px)}
+  .fighter .f-name{font-size:11px}
+}
+/* Short landscape (phone turned sideways): compact everything. */
+@media (orientation:landscape) and (max-height:500px){
+  .fighter .f-art{height:64px}
+  .fighter .f-name{font-size:10px;margin:3px 0 1px}
+  .fighter .f-sub{display:none}
+  .battle-top{padding:5px 10px 4px}
+  .bt-row2{margin-top:3px}
+  .battle-log{display:none}
+  .ab-energy{margin-bottom:5px}
+  .ab-heroes{margin-bottom:5px}
+  .action-bar{padding:6px 10px calc(8px + env(safe-area-inset-bottom))}
+  .ab-main{display:flex;gap:10px;align-items:stretch}
+  .ab-heroes{flex:1.1;margin-bottom:0}
+  .ab-skills{flex:1}
+  .ab-skills .actions-grid{height:100%}
 }
 </style>
 </head>
@@ -582,7 +657,7 @@ const CHAPTERS = [
       { s:"Sylvaine", t:"Look — the shadows. They're standing up. Shadows don't stand up!" },
       { s:"Aurelia", t:"Then we put them back down. Together. That's what this team is for." }
     ],
-    enemies:[ { id:"darius", scale:.6, name:"Rift Shadow Darius" }, { id:"seraphine", scale:.6, name:"Rift Shadow Seraphine" } ],
+    enemies:[ { id:"darius", scale:.6, name:"Shadow Darius" }, { id:"seraphine", scale:.6, name:"Shadow Seraphine" } ],
     reward:{ credits:100, xp:80 } },
   { id:2, num:"02", title:"A Minute Missing", subtitle:"CHAPTER 2 · MERIDIAN ARCHIVE", place:"The Clockwork Archive",
     brief:"Time itself stutters. The Archive's clocks all stopped at the same minute — and someone is hiding inside it.",
@@ -593,7 +668,7 @@ const CHAPTERS = [
       { s:"Raven's Brother", t:"You're looking for a door. I followed the feathers here. My sister went through it." },
       { s:"Sylvaine", t:"Then we find her. Nobody gets left on the other side of a Rift. Not on our watch." }
     ],
-    enemies:[ { id:"raven", scale:.7, name:"Rift Shadow Raven" }, { id:"darius", scale:.75, name:"Rift Shadow Darius" } ],
+    enemies:[ { id:"raven", scale:.7, name:"Shadow Raven" }, { id:"darius", scale:.75, name:"Shadow Darius" } ],
     reward:{ credits:130, xp:100 } },
   { id:3, num:"03", title:"Songs Under Glass", subtitle:"CHAPTER 3 · THE HOLLOW STATION", place:"The Hollow Station",
     brief:"A train station that never existed, full of songs nobody wrote. The Rift is dreaming — and its dreams bite.",
@@ -604,7 +679,7 @@ const CHAPTERS = [
       { s:"Aurelia", t:"Airi — the stars moved when you arrived. The Rift knows your name. It fears you." },
       { s:"Airi Tsukihana", t:"Good. Fear is the beginning of respect. Now — shall we teach it the rest?" }
     ],
-    enemies:[ { id:"seraphine", scale:.85, name:"Rift Shadow Seraphine" }, { id:"sylvaine", scale:.85, name:"Rift Shadow Sylvaine" }, { id:"darius", scale:.9, name:"Rift Shadow Darius" } ],
+    enemies:[ { id:"seraphine", scale:.85, name:"Shadow Seraphine" }, { id:"sylvaine", scale:.85, name:"Shadow Sylvaine" }, { id:"darius", scale:.9, name:"Shadow Darius" } ],
     reward:{ credits:160, xp:120 } },
   { id:4, num:"04", title:"The Bridge of Lost Things", subtitle:"CHAPTER 4 · GRAVITY'S EDGE", place:"The East Bridge",
     brief:"Kael Dreadbane held the bridge when the Rift opened. Now the Rift holds him — and the team must bring him back.",
@@ -616,7 +691,7 @@ const CHAPTERS = [
       { s:"Aurelia", t:"Then show US. That's what a team is. We carry it together — or not at all." },
       { s:"Kael Dreadbane", t:"...Alright. But if I lose control — put me down. That's an order." }
     ],
-    enemies:[ { id:"kael", scale:1, name:"Riftbound Kael", boss:true }, { id:"raven", scale:.9, name:"Rift Shadow Raven" } ],
+    enemies:[ { id:"kael", scale:1, name:"Riftbound Kael", boss:true }, { id:"raven", scale:.9, name:"Shadow Raven" } ],
     reward:{ credits:200, xp:150 } },
   { id:5, num:"05", title:"Fallen Grace", subtitle:"CHAPTER 5 · THE THRESHOLD", place:"The Threshold",
     brief:"At the edge of the Rift stand two who fell long before it opened — an angel who refused heaven, and a thirst older than the city.",
@@ -716,6 +791,9 @@ function closeModal(){ $("overlay").classList.remove("open"); $("overlay").inner
    Real art -> <img> (with an onerror that hides it, so a missing file
    never shows a broken icon — the gradient behind it still looks fine).
    No art -> animated CSS placeholder (rune + element glow + shimmer). */
+/* The 4 original portrait files have a baked-in "Name Lv." plate across the
+   bottom ~22% — the sprite files and the 7 generated portraits do not. */
+const PLATE_PORTRAITS = { "sylvaine.jpg":1, "aurelia.jpg":1, "seraphine.jpg":1, "darius.jpg":1 };
 function artHTML(id){
   const c = CHARS[id]; if(!c) return "";
   const art = ART[id];
@@ -728,7 +806,8 @@ function artHTML(id){
   // The placeholder sits UNDER the img: if the file loads it covers it;
   // if the file fails, the img removes itself and the placeholder shows.
   if(art && art.portrait){
-    return '<img src="'+art.portrait+'" alt="'+esc(c.name)+'" loading="lazy" onerror="this.remove()">' + ph;
+    const crop = PLATE_PORTRAITS[art.portrait] ? ' class="crop-plate"' : "";
+    return '<img' + crop + ' src="'+art.portrait+'" alt="'+esc(c.name)+'" loading="lazy" onerror="this.remove()">' + ph;
   }
   return ph;
 }
@@ -1076,7 +1155,7 @@ function makeArenaTeam(wave){
   const count = wave <= 2 ? 1 : wave <= 5 ? 2 : 3;
   const scale = 0.65 + wave * 0.07; // shadows grow stronger every wave
   const pool = [...ROSTER].sort(() => Math.random() - .5).slice(0, count);
-  return pool.map(id => makeUnit(id, true, scale, "Rift Shadow " + CHARS[id].short, false));
+  return pool.map(id => makeUnit(id, true, scale, "Shadow " + CHARS[id].short, false));
 }
 
 function startBattle(mode, chapter){
@@ -1084,24 +1163,29 @@ function startBattle(mode, chapter){
   const party = [...save.party];
   for(const id of save.owned){ if(party.length >= 3) break; if(!party.includes(id)) party.push(id); }
   if(party.length < 3){ showToast("You need 3 heroes in your party!"); return; }
-  let enemies, label, sub, reward;
+  let enemies, label, reward;
   if(mode === "story"){
     enemies = chapter.enemies.map(e => makeUnit(e.id, true, e.scale, e.name, e.boss));
-    label = "CHAPTER " + chapter.num + " — " + chapter.title.toUpperCase();
-    sub = chapter.place.toUpperCase();
+    label = "CH " + chapter.num + " · " + chapter.title.toUpperCase();
     reward = chapter.reward;
   } else {
     enemies = makeArenaTeam(save.wave);
-    label = "ARENA — WAVE " + save.wave;
-    sub = "RIFT SHADOWS · ENDLESS";
+    label = "ARENA · WAVE " + save.wave;
     reward = { credits: 40 + save.wave * 12, xp: 30 + save.wave * 8 };
   }
-  battle = { mode, chapter, label, sub, reward,
+  battle = { mode, chapter, label, reward,
     allies: party.map(id => makeUnit(id, false, 1)),
     enemies, energy: 4, round: 1, active: 0, acted: new Set(), target: 0,
-    phase: "player", over: false, animating: false, log: [] };
+    phase: "player", over: false, animating: false, log: [],
+    score: { ally: 0, enemy: 0 }, auto: false, speed: 1, paused: false,
+    autoTimer: null, timerInt: null,
+    startedAt: Date.now(), pausedMs: 0, endMs: 0 };
   document.body.classList.add("in-battle");
   renderBattle();
+  battle.timerInt = setInterval(() => {
+    if(!battle || battle.over) return;
+    const t = $("battleTimer"); if(t) t.textContent = "⏱ " + fmtBattleTime(battleElapsed());
+  }, 1000);
   logLine(mode === "story" ? "Defeat all enemies to clear the chapter!" : "Survive the Rift Shadows!");
   updateBattleUI();
   window.scrollTo(0, 0);
@@ -1110,9 +1194,13 @@ function startBattle(mode, chapter){
 function fighterHTML(u, side, i){
   const c = CHARS[u.charId];
   const hpPct = Math.max(0, Math.round(u.hp / u.maxHp * 100));
+  // Bosses show their short name on the tile (their full name is long);
+  // the battle log still uses the full name.
+  const shown = (u.boss && u.isEnemy) ? c.short : u.name;
   return '<div class="fighter ' + side + '" id="f-' + side + "-" + i + '" onclick="onFighterTap(\'' + side + "'," + i + ')">' +
     '<div class="f-art">' + spriteHTML(u.charId) + "</div>" +
-    '<div class="f-name">' + esc(u.name) + (u.boss ? ' <span class="pink">★</span>' : "") + "</div>" +
+    '<div class="f-ground"></div>' +
+    '<div class="f-name">' + esc(shown) + (u.boss ? ' <span class="pink">★</span>' : "") + "</div>" +
     '<div class="f-sub"><span id="hptext-' + side + "-" + i + '">HP ' + u.hp + " / " + u.maxHp + "</span></div>" +
     '<div class="hpbar' + (hpPct <= 25 ? " low" : "") + '" id="hpbar-' + side + "-" + i + '">' +
       '<i id="hpfill-' + side + "-" + i + '" style="width:' + hpPct + '%"></i></div>' +
@@ -1126,10 +1214,19 @@ function renderBattle(){
   $("view").innerHTML =
   '<div class="battle">' +
     '<div class="battle-top">' +
-      '<button class="btn ghost" style="min-height:38px;padding:6px 12px" onclick="leaveBattle()">✕</button>' +
-      '<div style="min-width:0"><div class="bt-title">' + esc(b.label) + '</div>' +
-      '<div class="bt-sub">' + esc(b.sub) + ' · ROUND <span id="roundNum">' + b.round + "</span></div></div>" +
-      '<div class="energy-pips" id="energyPips"></div><span class="energy-num" id="energyNum"></span>' +
+      '<div class="bt-row1">' +
+        '<button class="btn ghost" style="min-height:34px;padding:4px 11px" onclick="leaveBattle()">✕</button>' +
+        '<div class="bt-title">' + esc(b.label) + "</div>" +
+        '<div class="bt-timer" id="battleTimer">⏱ 0:00</div>' +
+      "</div>" +
+      '<div class="bt-row2">' +
+        '<div class="score" id="scoreBar"></div>' +
+        '<div class="bt-controls">' +
+          '<button class="ctl-btn" id="autoBtn" onclick="toggleAuto()">AUTO</button>' +
+          '<button class="ctl-btn" id="speedBtn" onclick="toggleSpeed()">×1</button>' +
+          '<button class="ctl-btn" id="pauseBtn" onclick="togglePause()">⏸</button>' +
+        "</div>" +
+      "</div>" +
     "</div>" +
     '<div class="stage" id="stage">' +
       '<img class="stage-bg" src="arena.jpg" alt="" onerror="this.remove()">' +
@@ -1137,6 +1234,7 @@ function renderBattle(){
       '<div class="fight-row" id="enemyRow">' + b.enemies.map((u,i) => fighterHTML(u, "enemy", i)).join("") + "</div>" +
       '<div class="fight-row allies" id="allyRow">' + b.allies.map((u,i) => fighterHTML(u, "ally", i)).join("") + "</div>" +
       '<div class="float-layer" id="floatLayer"></div>' +
+      '<div class="pause-veil" id="pauseVeil"><div><div class="pv-title">⏸ PAUSED</div><p>Auto-play and the timer are paused.</p><button class="btn primary" onclick="togglePause()">▶ Resume</button></div></div>' +
     "</div>" +
     '<div class="battle-log" id="battleLog"></div>' +
     '<div class="action-bar" id="actionBar"></div>' +
@@ -1173,47 +1271,76 @@ function updateBattleUI(){
       el.classList.toggle("acted", side === "ally" && b.acted.has(i));
     });
   });
-  // Energy pips (10 dots).
-  let pips = "";
-  for(let i=0;i<10;i++) pips += '<span class="ep' + (i < b.energy ? " on" : "") + '"></span>';
-  const pipEl = $("energyPips"); if(pipEl) pipEl.innerHTML = pips;
-  const enEl = $("energyNum"); if(enEl) enEl.textContent = b.energy + "/10";
-  const rn = $("roundNum"); if(rn) rn.textContent = b.round;
+  // Clock, score tug-of-war and battle controls.
+  const tm = $("battleTimer"); if(tm) tm.textContent = "⏱ " + fmtBattleTime(battleElapsed());
+  const sc = $("scoreBar");
+  if(sc){
+    const a = b.score.ally, e = b.score.enemy, tot = a + e;
+    const ap = tot ? Math.round(a / tot * 100) : 50;
+    sc.innerHTML = '<span class="sc-num ally">⚔ ' + a.toLocaleString() + "</span>" +
+      '<div class="sc-track"><i class="sc-a" style="width:' + ap + '%"></i><i class="sc-e" style="width:' + (100 - ap) + '%"></i></div>' +
+      '<span class="sc-num enemy">' + e.toLocaleString() + " ⚔</span>";
+  }
+  const ab = $("autoBtn"); if(ab) ab.classList.toggle("on", !!b.auto);
+  const sb = $("speedBtn"); if(sb) sb.textContent = "×" + b.speed;
+  const pb = $("pauseBtn"); if(pb) pb.textContent = b.paused ? "▶" : "⏸";
+  const root = document.querySelector(".battle");
+  if(root) root.classList.toggle("paused", !!b.paused);
   const tb = $("turnBanner");
-  if(tb) tb.textContent = b.over ? "BATTLE OVER" : b.phase === "enemy" ? "ENEMY TURN…" : "YOUR TURN — ROUND " + b.round;
+  if(tb) tb.textContent = b.over ? "BATTLE OVER" : b.paused ? "⏸ PAUSED" : b.phase === "enemy" ? "ENEMY TURN…" : "YOUR TURN — ROUND " + b.round;
   renderActionBar();
+  maybeAuto();
 }
 function renderActionBar(){
   const b = battle; if(!b) return;
   const bar = $("actionBar"); if(!bar) return;
-  if(b.over || b.phase === "enemy"){
-    bar.innerHTML = '<div class="ab-unit"><div><b>' + (b.over ? "Battle over" : "Enemies are acting…") + "</b>" +
-      "<small>Watch the stage — your turn is next.</small></div></div>";
-    return;
+  // Hero cards: tap one to make them the acting hero. The corner badge is
+  // the hero's skill cost, like the reference's card costs.
+  const heroes = b.allies.map((u,i) => {
+    const hpPct = Math.max(0, Math.round(u.hp / u.maxHp * 100));
+    const cls = "hero-card" + (i === b.active && b.phase === "player" && !b.over ? " active" : "") + (b.acted.has(i) ? " acted" : "") + (!u.alive ? " ko" : "");
+    return '<button class="' + cls + '" onclick="selectHero(' + i + ')">' +
+      '<span class="hc-art">' + spriteHTML(u.charId) + "</span>" +
+      '<span class="hc-info"><b>' + esc(u.name) + '</b><span class="hc-hp">HP ' + Math.max(0, u.hp) + " / " + u.maxHp + "</span>" +
+      '<span class="hc-hpbar"><i style="width:' + hpPct + '%"></i></span>' +
+      '<span class="hc-ultbar"><i style="width:' + u.ultCharge + '%"></i></span></span>' +
+      '<span class="hc-cost">' + u.cost + "</span></button>";
+  }).join("");
+  let skills;
+  if(b.over || b.phase === "enemy" || b.paused){
+    skills = '<div class="ab-status">' + (b.over ? "Battle over." : b.paused ? "⏸ Paused — tap ▶ to resume." : "Enemies are acting… your turn is next.") + "</div>";
+  } else {
+    const actor = b.allies[b.active];
+    if(!actor || !actor.alive){ skills = ""; }
+    else {
+      const skillOk = b.energy >= actor.cost && !b.animating;
+      const ultOk = actor.ultCharge >= 100 && !b.animating;
+      skills = '<div class="actions-grid">' +
+        '<button class="action-btn" onclick="playerAction(\'attack\')" ' + (b.animating ? "disabled" : "") + "><b>⚔ Attack</b><small>Free · +25 Ult charge</small></button>" +
+        '<button class="action-btn skill" onclick="playerAction(\'skill\')" ' + (skillOk ? "" : "disabled") + "><b>" + esc(actor.skill.name) + "</b><small>" + actor.cost + " energy · " + esc(actor.skill.desc) + "</small></button>" +
+        '<button class="action-btn ult' + (ultOk ? " ready" : "") + '" onclick="playerAction(\'ult\')" ' + (ultOk ? "" : "disabled") + "><b>✦ " + esc(actor.ult.name) + "</b><small>" + (actor.ultCharge >= 100 ? "READY!" : actor.ultCharge + "% charged") + '</small><span class="ult-charge" style="width:' + actor.ultCharge + '%"></span></button>' +
+      "</div>";
+    }
   }
-  const actor = b.allies[b.active];
-  if(!actor || !actor.alive){ bar.innerHTML = ""; return; }
-  const skillOk = b.energy >= actor.cost && !b.animating;
-  const ultOk = actor.ultCharge >= 100 && !b.animating;
   bar.innerHTML =
-    '<div class="ab-unit">' +
-      '<div class="ab-portrait">' + spriteHTML(actor.charId) + "</div>" +
-      "<div><b>" + esc(actor.name) + "</b><small>HP " + actor.hp + " / " + actor.maxHp + " · Ult " + actor.ultCharge + "% · Tap an enemy to target it</small></div>" +
-      '<button class="btn ghost ab-end" style="min-height:40px;padding:8px 12px" onclick="endRound()" ' + (b.animating ? "disabled" : "") + ">End Round ▸</button>" +
-    "</div>" +
-    '<div class="actions-grid">' +
-      '<button class="action-btn" onclick="playerAction(\'attack\')" ' + (b.animating ? "disabled" : "") + "><b>⚔ Attack</b><small>Free · +25 Ult charge</small></button>" +
-      '<button class="action-btn skill" onclick="playerAction(\'skill\')" ' + (skillOk ? "" : "disabled") + "><b>" + esc(actor.skill.name) + "</b><small>" + actor.cost + " energy · " + esc(actor.skill.desc) + "</small></button>" +
-      '<button class="action-btn ult' + (ultOk ? " ready" : "") + '" onclick="playerAction(\'ult\')" ' + (ultOk ? "" : "disabled") + "><b>✦ " + esc(actor.ult.name) + "</b><small>" + (actor.ultCharge >= 100 ? "READY!" : actor.ultCharge + "% charged") + '</small><span class="ult-charge" style="width:' + actor.ultCharge + '%"></span></button>' +
-    "</div>";
+    '<div class="ab-energy"><span aria-hidden="true">⚡</span><div class="ab-e-track"><i style="width:' + (b.energy * 10) + '%"></i></div>' +
+    '<span class="ab-e-num">' + b.energy + "/10</span>" +
+    '<button class="btn ghost ab-end" onclick="endRound()" ' + (b.animating || b.over || b.phase !== "player" || b.paused ? "disabled" : "") + ">End Round ▸</button></div>" +
+    '<div class="ab-main"><div class="ab-heroes">' + heroes + '</div><div class="ab-skills">' + skills + "</div></div>" +
+    '<div class="rotate-hint">⟲ Rotate your phone for the full arena view</div>';
 }
 function onFighterTap(side, i){
-  const b = battle; if(!b || b.over || b.animating) return;
+  const b = battle; if(!b || b.over || b.animating || b.paused) return;
   if(side === "enemy"){
     if(b.enemies[i] && b.enemies[i].alive){ b.target = i; updateBattleUI(); }
     return;
   }
-  // Tap an ally to switch the acting hero (if they still have a move).
+  selectHero(i);
+}
+/* Tap a hero card (or an ally on the stage) to switch the acting hero,
+   if they still have a move this round. */
+function selectHero(i){
+  const b = battle; if(!b || b.over || b.animating || b.paused) return;
   if(b.phase === "player" && b.allies[i] && b.allies[i].alive && !b.acted.has(i)){
     b.active = i; updateBattleUI();
   }
@@ -1222,7 +1349,7 @@ function logLine(msg){
   const b = battle; if(!b) return;
   b.log.push(msg); if(b.log.length > 3) b.log.shift();
   const el = $("battleLog");
-  if(el) el.innerHTML = b.log.map((l,i) => i === b.log.length-1 ? "<b>" + l + "</b>" : l).join("<br>");
+  if(el) el.innerHTML = "<b>" + b.log[b.log.length - 1] + "</b>";
 }
 function spawnFloater(side, idx, text, cls){
   const stage = $("stage"); const el = $("f-" + side + "-" + idx);
@@ -1232,7 +1359,9 @@ function spawnFloater(side, idx, text, cls){
   const span = document.createElement("span");
   span.className = "dmg-num " + (cls || "");
   span.textContent = text;
-  span.style.left = (r.left - sr.left + r.width / 2) + "px";
+  // Clamp inside the stage so numbers never run off the screen edge.
+  const x = r.left - sr.left + r.width / 2;
+  span.style.left = Math.max(46, Math.min(sr.width - 46, x)) + "px";
   span.style.top = (r.top - sr.top + r.height * 0.25) + "px";
   layer.appendChild(span);
   setTimeout(() => span.remove(), 1050);
@@ -1254,13 +1383,35 @@ function healUnit(u, amount){
   return healed;
 }
 
+/* A heal is only worth casting when someone actually needs HP — at/above
+   90% it would heal ~0, so the AI, AUTO and the player all skip it. */
+function healUseful(actor, eff){
+  const b = battle; if(!b) return true;
+  const friends = actor.isEnemy ? b.enemies : b.allies;
+  if(eff.type === "healSelf") return actor.hp / actor.maxHp < 0.9;
+  if(eff.type === "healTeam"){
+    const alive = friends.filter(u => u.alive);
+    if(!alive.length) return false;
+    return alive.reduce((s,u) => s + u.hp / u.maxHp, 0) / alive.length < 0.9;
+  }
+  if(eff.type === "healLowest"){
+    const hurt = friends.filter(u => u.alive).sort((x,y) => (x.hp/x.maxHp) - (y.hp/y.maxHp))[0];
+    return !!hurt && hurt.hp / hurt.maxHp < 0.9;
+  }
+  return true; // damage and energy effects are always useful
+}
+
 /* ---- player input ---- */
 function playerAction(action){
-  const b = battle; if(!b || b.over || b.animating || b.phase !== "player") return;
+  const b = battle; if(!b || b.over || b.animating || b.phase !== "player" || b.paused) return;
   const actor = b.allies[b.active];
   if(!actor || !actor.alive || b.acted.has(b.active)) return;
   if(action === "skill" && b.energy < actor.cost){ showToast("Not enough energy — attack to build up, or end the round for +2."); return; }
   if(action === "ult" && actor.ultCharge < 100){ showToast("Ultimate isn't charged yet!"); return; }
+  if(action !== "attack"){
+    const eff = action === "skill" ? actor.skill : actor.ult;
+    if(!healUseful(actor, eff)){ showToast("Already at full health — that heal would be wasted."); return; }
+  }
   const idx = b.active;
   resolveAction(actor, "ally", action, b.target, () => {
     b.acted.add(idx);
@@ -1268,7 +1419,7 @@ function playerAction(action){
   });
 }
 function endRound(){
-  const b = battle; if(!b || b.over || b.animating || b.phase !== "player") return;
+  const b = battle; if(!b || b.over || b.animating || b.phase !== "player" || b.paused) return;
   b.allies.forEach((a,i) => { if(a.alive) b.acted.add(i); });
   enemyPhase();
 }
@@ -1331,17 +1482,18 @@ function resolveAction(actor, side, action, targetIdx, done){
       if(action === "attack"){ const r = calcDamage(actor.atk, target.def); dmg = r.dmg; crit = r.crit; }
       else dmg = effect.amount;
       applyDamage(target, dmg);
+      if(isAlly) b.score.ally += dmg; else b.score.enemy += dmg;
       const tEl = $("f-" + (isAlly ? "enemy" : "ally") + "-" + tIdx);
-      if(tEl){ tEl.classList.add("hit"); setTimeout(() => tEl.classList.remove("hit"), 380); }
+      if(tEl){ tEl.classList.add("hit"); setTimeout(() => tEl.classList.remove("hit"), bDelay(380)); }
       if(isBig || crit || dmg >= 80){
         const st = $("stage");
-        if(st){ st.classList.add("shake"); setTimeout(() => st.classList.remove("shake"), 420); }
+        if(st){ st.classList.add("shake"); setTimeout(() => st.classList.remove("shake"), bDelay(420)); }
       }
       spawnFloater(isAlly ? "enemy" : "ally", tIdx, (crit ? "CRIT " : "") + "-" + dmg, crit ? "crit" : "");
       logLine(esc(target.name) + " took <b>" + dmg + "</b> damage" + (crit ? " — critical hit!" : "."));
     } else if(effect.type === "healSelf"){
       const healed = healUnit(actor, effect.amount);
-      if(actorEl){ actorEl.classList.add("heal-glow"); setTimeout(() => actorEl.classList.remove("heal-glow"), 700); }
+      if(actorEl){ actorEl.classList.add("heal-glow"); setTimeout(() => actorEl.classList.remove("heal-glow"), bDelay(700)); }
       spawnFloater(side, actorIdx, "+" + healed + " HP", "heal");
       logLine(esc(actor.name) + " recovered <b>" + healed + "</b> HP.");
     } else if(effect.type === "healTeam"){
@@ -1350,7 +1502,7 @@ function resolveAction(actor, side, action, targetIdx, done){
         const healed = healUnit(u, effect.amount);
         if(healed > 0) spawnFloater(side, i, "+" + healed, "heal");
         const el = $("f-" + side + "-" + i);
-        if(el){ el.classList.add("heal-glow"); setTimeout(() => el.classList.remove("heal-glow"), 700); }
+        if(el){ el.classList.add("heal-glow"); setTimeout(() => el.classList.remove("heal-glow"), bDelay(700)); }
       });
       logLine(esc(actor.name) + " healed the whole team!");
     } else if(effect.type === "healLowest"){
@@ -1372,7 +1524,7 @@ function resolveAction(actor, side, action, targetIdx, done){
     }
     updateBattleUI();
     finishAction();
-  }, action === "attack" ? 240 : 340);
+  }, bDelay(action === "attack" ? 240 : 340));
 
   function finishAction(){
     if(!battle) return;
@@ -1380,6 +1532,75 @@ function resolveAction(actor, side, action, targetIdx, done){
     if(checkEnd()) return;
     if(done) done();
   }
+}
+
+/* ---- battle clock, speed, auto-play and pause ---- */
+function bDelay(ms){ return battle ? ms / battle.speed : ms; }
+function battleElapsed(){
+  const b = battle; if(!b) return 0;
+  if(b.over && b.endMs) return b.endMs;
+  if(b.paused) return b.pausedMs;
+  return b.pausedMs + (Date.now() - b.startedAt);
+}
+function fmtBattleTime(ms){
+  const s = Math.floor(ms / 1000);
+  return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
+}
+function clearBattleTimers(){
+  const b = battle; if(!b) return;
+  if(b.autoTimer){ clearTimeout(b.autoTimer); b.autoTimer = null; }
+  if(b.timerInt){ clearInterval(b.timerInt); b.timerInt = null; }
+}
+function toggleAuto(){
+  const b = battle; if(!b || b.over) return;
+  b.auto = !b.auto;
+  if(!b.auto && b.autoTimer){ clearTimeout(b.autoTimer); b.autoTimer = null; }
+  showToast(b.auto ? "AUTO on — your heroes fight on their own." : "AUTO off — you're in control.");
+  updateBattleUI();
+}
+function toggleSpeed(){
+  const b = battle; if(!b || b.over) return;
+  b.speed = b.speed === 1 ? 2 : 1;
+  const root = document.querySelector(".battle");
+  if(root) root.classList.toggle("speed2", b.speed === 2);
+  showToast(b.speed === 2 ? "Battle speed ×2." : "Battle speed ×1.");
+  updateBattleUI();
+}
+function togglePause(){
+  const b = battle; if(!b || b.over) return;
+  if(!b.paused){
+    b.paused = true;
+    b.pausedMs = b.pausedMs + (Date.now() - b.startedAt);
+    if(b.autoTimer){ clearTimeout(b.autoTimer); b.autoTimer = null; }
+  } else {
+    b.paused = false;
+    b.startedAt = Date.now();
+  }
+  updateBattleUI();
+}
+/* When AUTO is on, queue the next player action. Called from
+   updateBattleUI; the guards make it safe to call from anywhere. */
+function maybeAuto(){
+  const b = battle;
+  if(!b || !b.auto || b.paused || b.over || b.phase !== "player" || b.animating) return;
+  if(b.autoTimer) return;
+  b.autoTimer = setTimeout(() => {
+    b.autoTimer = null;
+    if(!battle || !battle.auto || battle.paused || battle.over || battle.phase !== "player" || battle.animating) return;
+    autoPickAction();
+  }, bDelay(700));
+}
+function autoPickAction(){
+  const b = battle; if(!b) return;
+  const actor = b.allies[b.active];
+  if(!actor || !actor.alive || b.acted.has(b.active)){ advanceTurn(); return; }
+  if(actor.ultCharge >= 100 && healUseful(actor, actor.ult)){ playerAction("ult"); return; }
+  if(b.energy >= actor.cost && healUseful(actor, actor.skill)){
+    // Don't burn the Guardian's blessing when the energy bar is nearly full.
+    if(actor.skill.type === "energy" && b.energy >= 8){ playerAction("attack"); return; }
+    playerAction("skill"); return;
+  }
+  playerAction("attack");
 }
 
 /* ---- enemy AI: attack, or use a skill on cooldown; prefers weak targets ---- */
@@ -1400,17 +1621,23 @@ function enemyPhase(){
   let step = 0;
   function next(){
     if(!battle || battle.over) return;
+    if(b.paused){ setTimeout(next, 400); return; } // paused: wait, don't act
     if(step >= foes.length){ startNewRound(); return; }
     const ei = foes[step++];
     const e = b.enemies[ei];
     if(!e.alive){ next(); return; }
     const targetIdx = pickEnemyTarget();
     if(targetIdx < 0){ checkEnd(); return; }
-    const useSkill = e.skillCd <= 0 && Math.random() < 0.4;
+    // Enemies convert energy skills into heals — don't waste a skill on a
+    // heal nobody needs. (See healUseful for the 90% rule.)
+    let effType = e.skill.type;
+    if(effType === "energy") effType = "healLowest";
+    if(effType === "energyTeam") effType = "healTeam";
+    const useSkill = e.skillCd <= 0 && Math.random() < 0.4 && healUseful(e, { type: effType });
     if(useSkill) e.skillCd = 2;
-    resolveAction(e, "enemy", useSkill ? "skill" : "attack", targetIdx, () => setTimeout(next, 380));
+    resolveAction(e, "enemy", useSkill ? "skill" : "attack", targetIdx, () => setTimeout(next, bDelay(380)));
   }
-  setTimeout(next, 650);
+  setTimeout(next, bDelay(650));
 }
 function startNewRound(){
   const b = battle; if(!b || b.over) return;
@@ -1431,7 +1658,9 @@ function checkEnd(){
 }
 function endBattle(win){
   const b = battle; if(!b || b.over) return;
+  b.endMs = b.paused ? b.pausedMs : b.pausedMs + (Date.now() - b.startedAt);
   b.over = true; b.phase = "over";
+  clearBattleTimers();
   save.battles++;
   updateBattleUI();
   if(win){
@@ -1480,6 +1709,7 @@ function leaveBattle(){
   if(battle && !battle.over){
     if(!confirm("Leave this battle? Your progress in this fight will be lost.")) return;
   }
+  clearBattleTimers();
   battle = null;
   closeModal();
   document.body.classList.remove("in-battle");
@@ -1489,11 +1719,13 @@ function retryBattle(){
   const b = battle; if(!b) return;
   const mode = b.mode, ch = b.chapter;
   closeModal();
+  clearBattleTimers();
   battle = null;
   startBattle(mode, ch);
 }
 function nextArenaWave(){
   closeModal();
+  clearBattleTimers();
   battle = null;
   startBattle("arena", null);
 }
